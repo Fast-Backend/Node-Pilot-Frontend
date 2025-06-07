@@ -1,0 +1,23 @@
+.wrapper {
+  overflow: hidden;
+  box-shadow:
+    10px 0 15px rgba(42, 138, 246, 0.3),
+    -10px 0 15px rgba(233, 42, 103, 0.3);
+  display: flex;
+  position: relative;
+  background: linear-gradient(
+    270deg,
+    rgba(233, 42, 103, 1) 0%,
+    rgba(168, 83, 186, 1) 34%,
+    rgba(42, 138, 246, 1) 73%,
+    rgba(233, 42, 103, 1) 100%
+  );
+  border-radius: 10px;
+  padding: 5px;
+}
+
+@keyframes spinner {
+  100% {
+    transform: translate(-50%, -50%) rotate(-360deg);
+  }
+}
