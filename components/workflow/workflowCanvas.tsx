@@ -14,16 +14,19 @@ import {
   ReactFlowInstance,
   Panel,
   Node,
+  MarkerType,
 } from '@xyflow/react';
 
 import '@xyflow/react/dist/style.css';
 import { Button } from '@/components/ui/button';
+import ResizableNodeSelected from '@/components/workflow/nodeContainer/nodeWrapper';
 
 const initialNodes: Node[] = [
   {
     id: '1',
     position: { x: 0, y: 0 },
     data: { label: '1' },
+    type: 'wrapper',
   },
   { id: '2', position: { x: 100, y: 100 }, data: { label: '2' } },
 
@@ -34,6 +37,26 @@ const initialNodes: Node[] = [
   { id: '5', position: { x: 459, y: 300 }, data: { label: '5' } },
 ];
 const initialEdges = [{ id: 'e1-2', source: '1', target: '5' }];
+
+const nodeTypes = {
+  wrapper: ResizableNodeSelected,
+};
+
+// const edgeTypes = {
+//   floating: FloatingEdge,
+// };
+
+const connectionLineStyle = {
+  stroke: '#b1b1b7',
+};
+
+const defaultEdgeOptions = {
+  type: 'floating',
+  markerEnd: {
+    type: MarkerType.ArrowClosed,
+    color: '#b1b1b7',
+  },
+};
 
 export default function Workflow() {
   const [nodes, , onNodesChange] = useNodesState(initialNodes);
@@ -63,9 +86,13 @@ export default function Workflow() {
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
         onConnect={onConnect}
-        // nodeTypes={nodeTypes}
+        nodeTypes={nodeTypes}
         fitView
+        // edgeTypes={edgeTypes}
         onInit={(e) => setRfInstance(e as unknown as ReactFlowInstance)}
+        defaultEdgeOptions={defaultEdgeOptions}
+        // connectionLineComponent={CustomConnectionLine}
+        connectionLineStyle={connectionLineStyle}
       >
         <Controls />
         <MiniMap />
