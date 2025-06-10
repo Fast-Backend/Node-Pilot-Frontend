@@ -15,6 +15,7 @@ import {
   Panel,
   Node,
   MarkerType,
+  Edge,
 } from '@xyflow/react';
 
 import '@xyflow/react/dist/style.css';
@@ -26,7 +27,7 @@ const initialNodes: Node[] = [
     id: '1',
     position: { x: 0, y: 0 },
     data: { label: '1' },
-    type: 'wrapper',
+    // type: 'wrapper',
   },
   { id: '2', position: { x: 100, y: 100 }, data: { label: '2' } },
 
@@ -36,7 +37,9 @@ const initialNodes: Node[] = [
 
   { id: '5', position: { x: 459, y: 300 }, data: { label: '5' } },
 ];
-const initialEdges = [{ id: 'e1-2', source: '1', target: '5' }];
+const initialEdges: Edge[] = [
+  { id: 'e1-2', source: '1', target: '5', label: 'one-to-one' },
+];
 
 const nodeTypes = {
   wrapper: ResizableNodeSelected,
