@@ -38,7 +38,7 @@ import {
   FieldType,
   FieldTypes,
   Properties,
-  Relation,
+  // Relation,
   RouteMethods,
   ValidationRule,
   ValidationTypes,
@@ -141,33 +141,33 @@ export default function EditableCard({
     }));
   };
 
-  const addRelation = () => {
-    const newRelation: Relation = {
-      relation: 'one-to-one',
-      isParent: false,
-      controller: '',
-    };
-    setData((prev) => ({
-      ...prev,
-      relations: [...prev.relations, newRelation],
-    }));
-  };
+  // const addRelation = () => {
+  //   const newRelation: Relation = {
+  //     relation: 'one-to-one',
+  //     isParent: false,
+  //     controller: '',
+  //   };
+  //   setData((prev) => ({
+  //     ...prev,
+  //     relations: [...prev.relations, newRelation],
+  //   }));
+  // };
 
-  const updateRelation = (index: number, updates: Partial<Relation>) => {
-    setData((prev) => ({
-      ...prev,
-      relations: prev.relations.map((rel, i) =>
-        i === index ? { ...rel, ...updates } : rel
-      ),
-    }));
-  };
+  // const updateRelation = (index: number, updates: Partial<Relation>) => {
+  //   setData((prev) => ({
+  //     ...prev,
+  //     relations: prev.relations.map((rel, i) =>
+  //       i === index ? { ...rel, ...updates } : rel
+  //     ),
+  //   }));
+  // };
 
-  const removeRelation = (index: number) => {
-    setData((prev) => ({
-      ...prev,
-      relations: prev.relations.filter((_, i) => i !== index),
-    }));
-  };
+  // const removeRelation = (index: number) => {
+  //   setData((prev) => ({
+  //     ...prev,
+  //     relations: prev.relations.filter((_, i) => i !== index),
+  //   }));
+  // };
 
   const renderValidationRule = (
     rule: ValidationRule,
@@ -536,10 +536,10 @@ export default function EditableCard({
 
             {/* Properties */}
 
-            <Separator className="mb-5" />
+            {/* <Separator className="mb-5" /> */}
 
             {/* Relations */}
-            <Accordion type="single" collapsible>
+            {/* <Accordion type="single" collapsible>
               <AccordionItem value="item-1">
                 <AccordionTrigger>
                   {' '}
@@ -624,7 +624,7 @@ export default function EditableCard({
                   </div>
                 </AccordionContent>
               </AccordionItem>
-            </Accordion>
+            </Accordion> */}
 
             {/* Debug Output */}
             <Separator />
