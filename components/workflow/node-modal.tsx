@@ -285,7 +285,7 @@ export default function EditableCard({
             <Pencil />
           </Button>
         </DialogTrigger> */}
-        <DialogContent className="sm:max-w-md overflow-auto max-h-[80vh]">
+        <DialogContent className="sm:max-w-md overflow-visible max-h-[90vh]">
           <DialogHeader>
             <DialogTitle>Entity Configuration</DialogTitle>
             <DialogDescription>
