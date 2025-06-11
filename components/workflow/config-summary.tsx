@@ -14,7 +14,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Pencil, Check, X, Plus, Trash2 } from 'lucide-react';
 import {
-  EditableData,
+  WorkflowProps,
   FieldType,
   Properties,
   RouteMethods,
@@ -28,6 +28,7 @@ import {
   AccordionTrigger,
 } from '../ui/accordion';
 import EditableCard from './node-modal';
+import { Handle, Position } from '@xyflow/react';
 
 // interface ConfigSummaryProps {
 //   name: string;
@@ -42,15 +43,19 @@ import EditableCard from './node-modal';
 //   onRemoveProperty: (index: number) => void;
 // }
 
-const data: EditableData = {
-  name: 'name',
-  props: [],
-  relations: [],
-  routes: [], // Changed to array of methods
-};
+// const data: WorkflowProps = {
+//   name: 'name',
+//   props: [],
+//   relations: [],
+//   routes: [], // Changed to array of methods
+// };
 
-export default function ConfigSummary() {
-  const [initialData, setInitialData] = useState<EditableData>(data);
+interface ConfigSummaryProps {
+  data: WorkflowProps;
+}
+
+export default function ConfigSummary({ data }: ConfigSummaryProps) {
+  const [initialData, setInitialData] = useState<WorkflowProps>(data);
   const [editingName, setEditingName] = useState(false);
   const [tempName, setTempName] = useState(data.name);
   const [modalOpen, setModalOpen] = useState(false);
@@ -157,11 +162,19 @@ export default function ConfigSummary() {
   ];
 
   return (
-    <>
+    <div>
+      <Handle
+        type="target"
+        position={Position.Top}
+        style={{
+          width: '15px',
+          height: '15px',
+        }}
+      />
       <Card className="w-80">
-        <CardContent className="space-y-2">
+        <CardContent>
           {/* Entity Name - Editable */}
-          <div className="space-y-2">
+          <div>
             <div className="flex justify-between">
               <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wide">
                 Entity
@@ -224,7 +237,7 @@ export default function ConfigSummary() {
             )}
           </div>
 
-          <Separator />
+          <Separator className="my-1" />
 
           {/* Routes - Toggleable Pills */}
           <div className="space-y-2">
@@ -416,6 +429,15 @@ export default function ConfigSummary() {
         modalOpen={modalOpen}
         onModalOpen={() => setModalOpen(false)}
       />
-    </>
+      <Handle
+        type="source"
+        position={Position.Bottom}
+        id="a"
+        style={{
+          width: '15px',
+          height: '15px',
+        }}
+      />
+    </div>
   );
 }
