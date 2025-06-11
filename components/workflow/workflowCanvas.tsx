@@ -19,13 +19,14 @@ import {
   DefaultEdgeOptions,
   ConnectionLineType,
   useReactFlow,
+  XYPosition,
 } from '@xyflow/react';
 
 import '@xyflow/react/dist/style.css';
 import { Button } from '@/components/ui/button';
 import ResizableNodeSelected from '@/components/workflow/nodeContainer/nodeWrapper';
 import ConfigSummary from './config-summary';
-import { WorkflowProps } from '@/types/types';
+import { Relation, RelationTypes, WorkflowProps } from '@/types/types';
 import ParentChildCustomEdge from './custom-edge';
 
 interface NodeWrapperProps {
@@ -34,6 +35,17 @@ interface NodeWrapperProps {
 }
 interface NodeProps extends Node {
   data: WorkflowProps;
+}
+interface FinalFlowProps {
+  cardId: string;
+  workflow: WorkflowProps;
+  dimensions:
+    | {
+        width?: number;
+        height?: number;
+      }
+    | undefined;
+  position: XYPosition;
 }
 
 const initialNodes: NodeProps[] = [];
@@ -62,7 +74,7 @@ const NodeWrapper = ({ data, id }: NodeWrapperProps) => {
     );
   }, [nodeData, id, reactFlow]);
 
-  return <ConfigSummary data={data} onUpdate={handleUpdate} />;
+  return <ConfigSummary id={id} data={data} onUpdate={handleUpdate} />;
 };
 
 const nodeTypes = {
@@ -119,14 +131,62 @@ export default function Workflow() {
   );
 
   const onSave = useCallback(() => {
+    const finalData: FinalFlowProps[] = [];
+    console.log('start');
+
     if (rfInstance) {
-      const flow = rfInstance.toObject();
-      console.log('Flow:', flow);
-      //   localStorage.setItem('flowKey', JSON.stringify(flow));
+      const flows = rfInstance.toObject();
+      console.log('Flow:', flows);
+
+      // Step 1: Build finalData with cleared relations
+      flows.nodes.forEach((node) => {
+        const data = {
+          cardId: node.id,
+          workflow: {
+            ...(node.data as WorkflowProps),
+            relations: [], // reset to avoid duplication
+          },
+          dimensions: node.measured,
+          position: node.position,
+        };
+        finalData.push(data);
+      });
+
+      // Step 2: Process edges and add relations
+      flows.edges.forEach((edge) => {
+        const sourceIndex = finalData.findIndex(
+          (flow) => flow.cardId === edge.source
+        );
+        const targetIndex = finalData.findIndex(
+          (flow) => flow.cardId === edge.target
+        );
+
+        if (sourceIndex === -1 || targetIndex === -1) {
+          console.warn('Invalid edge connection found:', edge);
+          return;
+        }
+
+        const relation = (edge.data?.relation as RelationTypes) ?? '';
+
+        const relationParent: Relation = {
+          controller: finalData[targetIndex].workflow.name,
+          relation,
+          isParent: true,
+        };
+
+        const relationChild: Relation = {
+          controller: finalData[sourceIndex].workflow.name,
+          relation,
+          isParent: false,
+        };
+
+        finalData[sourceIndex].workflow.relations.push(relationParent);
+        finalData[targetIndex].workflow.relations.push(relationChild);
+      });
+
+      console.log(finalData);
     }
   }, [rfInstance]);
-
-  // const nodeTypes = { textUpdater: NodeWrapper };
 
   return (
     <div style={{ width: '100vw', height: '100dvh' }}>
@@ -138,6 +198,11 @@ export default function Workflow() {
         onConnect={onConnect}
         nodeTypes={nodeTypes}
         fitView
+        onNodeClick={(node) => {
+          node.currentTarget.classList.add('border-2');
+          node.currentTarget.classList.add('border-red-400');
+          node.currentTarget.classList.add('rounded-2xl');
+        }}
         edgeTypes={edgeTypes}
         onInit={(e) => setRfInstance(e as unknown as ReactFlowInstance)}
         defaultEdgeOptions={defaultEdgeOptions}
