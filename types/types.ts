@@ -55,10 +55,13 @@ export type Properties = {
     validation?: ValidationRule[];
 };
 
+export type RelationTypes = 'one-to-one' | 'one-to-many' | 'many-to-many' | "";
+
 export type Relation = {
-    relation: 'one-to-one' | 'one-to-many' | 'many-to-many';
+    relation: RelationTypes
     isParent: boolean;
     controller: string;
+    edgeId?: string
 };
 
 export const FieldTypes: FieldType[] = [
