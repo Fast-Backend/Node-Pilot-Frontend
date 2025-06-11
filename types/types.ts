@@ -61,7 +61,6 @@ export type Relation = {
     relation: RelationTypes
     isParent: boolean;
     controller: string;
-    edgeId?: string
 };
 
 export const FieldTypes: FieldType[] = [
