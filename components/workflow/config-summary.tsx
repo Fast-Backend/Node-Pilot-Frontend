@@ -51,11 +51,16 @@ import { Handle, Position } from '@xyflow/react';
 // };
 
 interface ConfigSummaryProps {
+  id: string;
   data: WorkflowProps;
   onUpdate: (data: WorkflowProps) => void;
 }
 
-export default function ConfigSummary({ data, onUpdate }: ConfigSummaryProps) {
+export default function ConfigSummary({
+  data,
+  onUpdate,
+  id,
+}: ConfigSummaryProps) {
   const [initialData, setInitialData] = useState<WorkflowProps>(data);
   const [editingName, setEditingName] = useState(false);
   const [tempName, setTempName] = useState(data.name);
@@ -169,7 +174,7 @@ export default function ConfigSummary({ data, onUpdate }: ConfigSummaryProps) {
   ];
 
   return (
-    <div>
+    <>
       <Handle
         type="target"
         position={Position.Top}
@@ -178,7 +183,7 @@ export default function ConfigSummary({ data, onUpdate }: ConfigSummaryProps) {
           height: '15px',
         }}
       />
-      <Card className="w-80">
+      <Card className="w-80 hover:border-2" key={id}>
         <CardContent>
           {/* Entity Name - Editable */}
           <div>
@@ -449,6 +454,6 @@ export default function ConfigSummary({ data, onUpdate }: ConfigSummaryProps) {
           height: '15px',
         }}
       />
-    </div>
+    </>
   );
 }
