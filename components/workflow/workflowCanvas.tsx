@@ -16,55 +16,101 @@ import {
   Node,
   MarkerType,
   Edge,
+  DefaultEdgeOptions,
+  ConnectionLineType,
 } from '@xyflow/react';
 
 import '@xyflow/react/dist/style.css';
 import { Button } from '@/components/ui/button';
 import ResizableNodeSelected from '@/components/workflow/nodeContainer/nodeWrapper';
+import ConfigSummary from './config-summary';
+import { WorkflowProps } from '@/types/types';
+import ParentChildCustomEdge from './custom-edge';
 
-const initialNodes: Node[] = [
-  {
-    id: '1',
-    position: { x: 0, y: 0 },
-    data: { label: '1' },
-    // type: 'wrapper',
-  },
-  { id: '2', position: { x: 100, y: 100 }, data: { label: '2' } },
+// interface NodeWrapperProps {
+//   id: string;
+//   data: WorkflowProps;
+// }
+interface NodeProps extends Node {
+  data: WorkflowProps;
+}
 
-  { id: '3', position: { x: 20, y: 550 }, data: { label: '3' } },
+const initialNodes: NodeProps[] = [];
+const initialEdges: Edge[] = [];
 
-  { id: '4', position: { x: 660, y: 100 }, data: { label: '4' } },
+// const NodeWrapper = ({ data, id }: NodeWrapperProps) => {
+//   const [nodeData, setNodeData] = useState(data);
+//   const handleUpdate = (updatedData: WorkflowProps) => {
+//     setNodeData(updatedData);
+//     // Optionally, you can propagate the changes to the parent or global state here
+//   };
+//   //   console.log('Node Data:', id);
+//   const reactFlow = useReactFlow();
 
-  { id: '5', position: { x: 459, y: 300 }, data: { label: '5' } },
-];
-const initialEdges: Edge[] = [
-  { id: 'e1-2', source: '1', target: '5', label: 'one-to-one' },
-];
+//   useEffect(() => {
+//     reactFlow.setNodes((nds) =>
+//       nds.map((node) => {
+//         if (node.id === id) {
+//           return {
+//             ...node,
+//             data: { ...node.data, ...nodeData },
+//           };
+//         }
+//         return node;
+//       })
+//     );
+//   }, [nodeData, id, reactFlow]);
+
+//   return <ConfigSummary data={data} />;
+// };
 
 const nodeTypes = {
   wrapper: ResizableNodeSelected,
+  card: ConfigSummary,
 };
 
-// const edgeTypes = {
-//   floating: FloatingEdge,
-// };
+const edgeTypes = {
+  parent_child: ParentChildCustomEdge,
+};
 
 const connectionLineStyle = {
   stroke: '#b1b1b7',
 };
 
-const defaultEdgeOptions = {
-  type: 'floating',
+const defaultEdgeOptions: DefaultEdgeOptions = {
+  // type: 'floating',
   markerEnd: {
     type: MarkerType.ArrowClosed,
     color: '#b1b1b7',
+    strokeWidth: 5,
   },
+  data: {
+    startLabel: 'parent',
+    endLabel: 'child',
+  },
+  label: 'trace',
+  type: 'parent_child',
 };
 
+const getNodeId = () => `node_${+new Date()}`;
+
 export default function Workflow() {
-  const [nodes, , onNodesChange] = useNodesState(initialNodes);
+  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
   const [rfInstance, setRfInstance] = useState<ReactFlowInstance>();
+
+  const onAdd = useCallback(() => {
+    const newNode: NodeProps = {
+      id: getNodeId(),
+      data: { name: 'unNamed', props: [], relations: [], routes: [] },
+      position: {
+        x: (Math.random() - 0.5) * 400,
+        y: (Math.random() - 0.5) * 400,
+      },
+      type: 'card',
+    };
+    setNodes((nds) => nds.concat(newNode));
+  }, [setNodes]);
 
   const onConnect: OnConnect = useCallback(
     (params) => setEdges((eds) => addEdge(params, eds)),
@@ -91,18 +137,19 @@ export default function Workflow() {
         onConnect={onConnect}
         nodeTypes={nodeTypes}
         fitView
-        // edgeTypes={edgeTypes}
+        edgeTypes={edgeTypes}
         onInit={(e) => setRfInstance(e as unknown as ReactFlowInstance)}
         defaultEdgeOptions={defaultEdgeOptions}
         // connectionLineComponent={CustomConnectionLine}
         connectionLineStyle={connectionLineStyle}
+        connectionLineType={ConnectionLineType.Step}
       >
         <Controls />
         <MiniMap />
         <Background variant={BackgroundVariant.Dots} gap={12} size={1} />
         <Panel position="top-right">
           <div className="flex gap-4">
-            <Button onClick={onSave} className="cursor-pointer">
+            <Button onClick={onAdd} className="cursor-pointer">
               Create
             </Button>
             <Button onClick={onSave} className="cursor-pointer">
