@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -54,6 +54,10 @@ export default function EditableCard({
   modalOpen,
   onModalOpen,
 }: WorkflowCardProps) {
+  useEffect(() => {
+    setData(workflow);
+  }, [workflow]);
+
   const [data, setData] = useState<WorkflowProps>(workflow);
 
   const updateName = (name: string) => {
