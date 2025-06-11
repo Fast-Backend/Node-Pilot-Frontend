@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
   ReactFlow,
   MiniMap,
@@ -18,6 +18,7 @@ import {
   Edge,
   DefaultEdgeOptions,
   ConnectionLineType,
+  useReactFlow,
 } from '@xyflow/react';
 
 import '@xyflow/react/dist/style.css';
@@ -27,10 +28,10 @@ import ConfigSummary from './config-summary';
 import { WorkflowProps } from '@/types/types';
 import ParentChildCustomEdge from './custom-edge';
 
-// interface NodeWrapperProps {
-//   id: string;
-//   data: WorkflowProps;
-// }
+interface NodeWrapperProps {
+  id: string;
+  data: WorkflowProps;
+}
 interface NodeProps extends Node {
   data: WorkflowProps;
 }
@@ -38,35 +39,35 @@ interface NodeProps extends Node {
 const initialNodes: NodeProps[] = [];
 const initialEdges: Edge[] = [];
 
-// const NodeWrapper = ({ data, id }: NodeWrapperProps) => {
-//   const [nodeData, setNodeData] = useState(data);
-//   const handleUpdate = (updatedData: WorkflowProps) => {
-//     setNodeData(updatedData);
-//     // Optionally, you can propagate the changes to the parent or global state here
-//   };
-//   //   console.log('Node Data:', id);
-//   const reactFlow = useReactFlow();
+const NodeWrapper = ({ data, id }: NodeWrapperProps) => {
+  const [nodeData, setNodeData] = useState(data);
+  const handleUpdate = (updatedData: WorkflowProps) => {
+    setNodeData(updatedData);
+    // Optionally, you can propagate the changes to the parent or global state here
+  };
+  //   console.log('Node Data:', id);
+  const reactFlow = useReactFlow();
 
-//   useEffect(() => {
-//     reactFlow.setNodes((nds) =>
-//       nds.map((node) => {
-//         if (node.id === id) {
-//           return {
-//             ...node,
-//             data: { ...node.data, ...nodeData },
-//           };
-//         }
-//         return node;
-//       })
-//     );
-//   }, [nodeData, id, reactFlow]);
+  useEffect(() => {
+    reactFlow.setNodes((nds) =>
+      nds.map((node) => {
+        if (node.id === id) {
+          return {
+            ...node,
+            data: { ...node.data, ...nodeData },
+          };
+        }
+        return node;
+      })
+    );
+  }, [nodeData, id, reactFlow]);
 
-//   return <ConfigSummary data={data} />;
-// };
+  return <ConfigSummary data={data} onUpdate={handleUpdate} />;
+};
 
 const nodeTypes = {
   wrapper: ResizableNodeSelected,
-  card: ConfigSummary,
+  card: NodeWrapper,
 };
 
 const edgeTypes = {
