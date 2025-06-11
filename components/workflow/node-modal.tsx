@@ -22,6 +22,7 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
 } from '../ui/dialog';
@@ -47,12 +48,14 @@ interface WorkflowCardProps {
   workflow: WorkflowProps;
   modalOpen: boolean;
   onModalOpen: () => void;
+  onSave: (data: WorkflowProps) => void;
 }
 
 export default function EditableCard({
   workflow,
   modalOpen,
   onModalOpen,
+  onSave,
 }: WorkflowCardProps) {
   useEffect(() => {
     setData(workflow);
@@ -643,6 +646,16 @@ export default function EditableCard({
               </AccordionItem>
             </Accordion>
           </ScrollArea>
+          <DialogFooter>
+            <Button
+              className="cursor-pointer"
+              onClick={() => {
+                onSave(data);
+              }}
+            >
+              Save
+            </Button>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
     </div>
