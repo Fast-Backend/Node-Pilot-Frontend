@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { Input } from '@/components/ui/input';
@@ -52,9 +52,10 @@ import { Handle, Position } from '@xyflow/react';
 
 interface ConfigSummaryProps {
   data: WorkflowProps;
+  onUpdate: (data: WorkflowProps) => void;
 }
 
-export default function ConfigSummary({ data }: ConfigSummaryProps) {
+export default function ConfigSummary({ data, onUpdate }: ConfigSummaryProps) {
   const [initialData, setInitialData] = useState<WorkflowProps>(data);
   const [editingName, setEditingName] = useState(false);
   const [tempName, setTempName] = useState(data.name);
@@ -141,6 +142,12 @@ export default function ConfigSummary({ data }: ConfigSummaryProps) {
       ),
     }));
   };
+
+  useEffect(() => {
+    if (onUpdate) {
+      onUpdate(initialData);
+    }
+  }, [initialData, onUpdate]);
 
   const fieldTypes: FieldType[] = [
     'string',
@@ -428,6 +435,10 @@ export default function ConfigSummary({ data }: ConfigSummaryProps) {
         workflow={initialData}
         modalOpen={modalOpen}
         onModalOpen={() => setModalOpen(false)}
+        onSave={(data) => {
+          setInitialData(data);
+          setModalOpen(false);
+        }}
       />
       <Handle
         type="source"
