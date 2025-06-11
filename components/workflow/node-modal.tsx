@@ -33,7 +33,7 @@ import {
   AccordionTrigger,
 } from '../ui/accordion';
 import {
-  EditableData,
+  WorkflowProps,
   FieldType,
   FieldTypes,
   Properties,
@@ -43,8 +43,8 @@ import {
   ValidationTypes,
 } from '@/types/types';
 
-interface WorkflowProps {
-  workflow: EditableData;
+interface WorkflowCardProps {
+  workflow: WorkflowProps;
   modalOpen: boolean;
   onModalOpen: () => void;
 }
@@ -53,8 +53,8 @@ export default function EditableCard({
   workflow,
   modalOpen,
   onModalOpen,
-}: WorkflowProps) {
-  const [data, setData] = useState<EditableData>(workflow);
+}: WorkflowCardProps) {
+  const [data, setData] = useState<WorkflowProps>(workflow);
 
   const updateName = (name: string) => {
     setData((prev) => ({ ...prev, name }));
