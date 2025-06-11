@@ -274,7 +274,7 @@ export default function ConfigSummary({ data }: ConfigSummaryProps) {
             )}
           </div>
 
-          <Separator />
+          <Separator className="my-2" />
 
           {/* Properties - Editable */}
           <div className="space-y-2">
