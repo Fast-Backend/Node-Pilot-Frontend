@@ -267,7 +267,7 @@ export default function SettingsDrawer({
             Configure CORS Settings
           </Button>
         </DrawerTrigger> */}
-        <DrawerContent className="max-h-[90vh]">
+        <DrawerContent className="h-screen">
           <DrawerHeader>
             <DrawerTitle>CORS Configuration</DrawerTitle>
             <DrawerDescription>
