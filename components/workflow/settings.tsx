@@ -264,270 +264,330 @@ export default function SettingsDrawer({
       <Drawer open={openDrawer} onOpenChange={handleOpen} direction="right">
         <DrawerContent className="h-screen">
           <DrawerHeader>
-            <DrawerTitle>CORS Configuration</DrawerTitle>
+            <DrawerTitle>Configuration</DrawerTitle>
             <DrawerDescription>
-              Configure Cross-Origin Resource Sharing settings for your API
+              Configure settings for the project
             </DrawerDescription>
           </DrawerHeader>
+          <div className="px-6 flex items-center gap-4">
+            <h3>name:</h3>
+            <Input placeholder="Project Name" defaultValue={'Untitled'} />
+          </div>
 
           <div className="px-4 pb-4 overflow-y-auto">
-            <div className="space-y-6">
-              {/* Origins */}
-              <div className="space-y-3">
-                <Label className="text-sm font-medium">Allowed Origins</Label>
-                <div className="flex gap-2">
-                  <Input
-                    placeholder="https://example.com"
-                    value={newOrigin}
-                    onChange={(e) => setNewOrigin(e.target.value)}
-                    onKeyDown={(e) => e.key === 'Enter' && addOrigin()}
-                  />
-                  <Button onClick={addOrigin} size="sm" variant="outline">
-                    <Plus className="h-4 w-4" />
-                  </Button>
-                </div>
-                <div className="flex flex-wrap gap-2">
-                  {origins.map((origin) => (
-                    <Badge key={origin} variant="secondary" className="gap-1">
-                      {origin}
-                      {origin !== '*' && (
-                        <button
-                          onClick={() => removeOrigin(origin)}
-                          className="ml-1 hover:bg-destructive/20 rounded-full p-0.5"
-                        >
-                          <X className="h-3 w-3" />
-                        </button>
-                      )}
-                    </Badge>
-                  ))}
-                </div>
-              </div>
-
-              <Separator />
-
-              {/* HTTP Methods */}
-              <div className="space-y-3">
-                <Label className="text-sm font-medium">Allowed Methods</Label>
-                <div className="grid grid-cols-3 gap-3">
-                  {HTTP_METHODS.map((method) => (
-                    <div key={method} className="flex items-center space-x-2">
-                      <Checkbox
-                        id={`method-${method}`}
-                        checked={currentMethods.includes(method)}
-                        onCheckedChange={(checked) =>
-                          handleMethodChange(method, checked as boolean)
-                        }
-                      />
-                      <Label htmlFor={`method-${method}`} className="text-sm">
-                        {method}
-                      </Label>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              <Separator />
-
-              {/* Allowed Headers */}
-              <div className="space-y-3">
-                <Label className="text-sm font-medium">Allowed Headers</Label>
-                <div className="grid grid-cols-2 gap-3">
-                  {ALLOWED_HEADERS.map((header) => (
-                    <div key={header} className="flex items-center space-x-2">
-                      <Checkbox
-                        id={`allowed-${header}`}
-                        checked={currentAllowedHeaders.includes(header)}
-                        onCheckedChange={(checked) =>
-                          handleAllowedHeaderChange(header, checked as boolean)
-                        }
-                      />
-                      <Label htmlFor={`allowed-${header}`} className="text-sm">
-                        {header}
-                      </Label>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              <Separator />
-
-              {/* Exposed Headers */}
-              <div className="space-y-3">
-                <Label className="text-sm font-medium">Exposed Headers</Label>
-                <div className="grid grid-cols-2 gap-3">
-                  {EXPOSED_HEADERS.map((header) => (
-                    <div key={header} className="flex items-center space-x-2">
-                      <Checkbox
-                        id={`exposed-${header}`}
-                        checked={currentExposedHeaders.includes(header)}
-                        onCheckedChange={(checked) =>
-                          handleExposedHeaderChange(header, checked as boolean)
-                        }
-                      />
-                      <Label htmlFor={`exposed-${header}`} className="text-sm">
-                        {header}
-                      </Label>
-                    </div>
-                  ))}
-                </div>
-
-                {/* Custom Exposed Header */}
-                <div className="flex gap-2">
-                  <Input
-                    placeholder="Custom header name"
-                    value={customExposedHeader}
-                    onChange={(e) => setCustomExposedHeader(e.target.value)}
-                    onKeyDown={(e) =>
-                      e.key === 'Enter' && addCustomExposedHeader()
-                    }
-                  />
-                  <Button
-                    onClick={addCustomExposedHeader}
-                    size="sm"
-                    variant="outline"
-                  >
-                    <Plus className="h-4 w-4" />
-                  </Button>
-                </div>
-
-                {/* Show custom headers */}
-                {currentExposedHeaders.filter(
-                  (h) => !EXPOSED_HEADERS.includes(h as any)
-                ).length > 0 && (
-                  <div className="flex flex-wrap gap-2">
-                    {currentExposedHeaders
-                      .filter((h) => !EXPOSED_HEADERS.includes(h as any))
-                      .map((header) => (
-                        <Badge key={header} variant="outline" className="gap-1">
-                          {header}
-                          <button
-                            onClick={() =>
-                              handleExposedHeaderChange(header, false)
-                            }
-                            className="ml-1 hover:bg-destructive/20 rounded-full p-0.5"
-                          >
-                            <X className="h-3 w-3" />
-                          </button>
-                        </Badge>
-                      ))}
-                  </div>
-                )}
-              </div>
-
-              <Separator />
-
-              {/* Boolean Settings */}
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <div className="space-y-0.5">
-                    <Label className="text-sm font-medium">
-                      Allow Credentials
-                    </Label>
-                    <p className="text-xs text-muted-foreground">
-                      Allow cookies and authentication headers
-                    </p>
-                  </div>
-                  <Switch
-                    checked={corsSettings.credentials}
-                    onCheckedChange={(checked) =>
-                      setCorsSettings({ ...corsSettings, credentials: checked })
-                    }
-                  />
-                </div>
-
-                <div className="flex items-center justify-between">
-                  <div className="space-y-0.5">
-                    <Label className="text-sm font-medium">
-                      Preflight Continue
-                    </Label>
-                    <p className="text-xs text-muted-foreground">
-                      Pass control to next handler after preflight
-                    </p>
-                  </div>
-                  <Switch
-                    checked={corsSettings.preflightContinue}
-                    onCheckedChange={(checked) =>
-                      setCorsSettings({
-                        ...corsSettings,
-                        preflightContinue: checked,
-                      })
-                    }
-                  />
-                </div>
-              </div>
-
-              <Separator />
-
-              {/* Numeric Settings */}
-              <div className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="maxAge" className="text-sm font-medium">
-                    Max Age (seconds)
-                  </Label>
-                  <Input
-                    id="maxAge"
-                    type="number"
-                    value={corsSettings.maxAge || ''}
-                    onChange={(e) =>
-                      setCorsSettings({
-                        ...corsSettings,
-                        maxAge: e.target.value
-                          ? Number.parseInt(e.target.value)
-                          : undefined,
-                      })
-                    }
-                    placeholder="86400"
-                  />
-                  <p className="text-xs text-muted-foreground">
-                    How long browsers can cache preflight responses
-                  </p>
-                </div>
-
-                <div className="space-y-2">
-                  <Label
-                    htmlFor="optionsStatus"
-                    className="text-sm font-medium"
-                  >
-                    Options Success Status
-                  </Label>
-                  <Input
-                    id="optionsStatus"
-                    type="number"
-                    value={corsSettings.optionsSuccessStatus || ''}
-                    onChange={(e) =>
-                      setCorsSettings({
-                        ...corsSettings,
-                        optionsSuccessStatus: e.target.value
-                          ? Number.parseInt(e.target.value)
-                          : undefined,
-                      })
-                    }
-                    placeholder="204"
-                  />
-                  <p className="text-xs text-muted-foreground">
-                    Status code for successful OPTIONS requests
-                  </p>
-                </div>
-              </div>
-            </div>
             <Accordion type="single" collapsible>
               <AccordionItem value="value-1">
                 <AccordionTrigger>
-                  <h3 className="font-medium">Current CORS Configuration:</h3>
+                  <h3 className="font-medium">CORS Configuration</h3>
                 </AccordionTrigger>
                 <AccordionContent>
-                  <div className="mt-8 p-4 bg-muted rounded-lg">
-                    <pre className="text-sm overflow-x-auto">
-                      {JSON.stringify(corsSettings, null, 2)}
-                    </pre>
+                  <div className="space-y-6">
+                    {/* Origins */}
+                    <div className="space-y-3">
+                      <Label className="text-sm font-medium">
+                        Allowed Origins
+                      </Label>
+                      <div className="flex gap-2">
+                        <Input
+                          placeholder="https://example.com"
+                          value={newOrigin}
+                          onChange={(e) => setNewOrigin(e.target.value)}
+                          onKeyDown={(e) => e.key === 'Enter' && addOrigin()}
+                        />
+                        <Button onClick={addOrigin} size="sm" variant="outline">
+                          <Plus className="h-4 w-4" />
+                        </Button>
+                      </div>
+                      <div className="flex flex-wrap gap-2">
+                        {origins.map((origin) => (
+                          <Badge
+                            key={origin}
+                            variant="secondary"
+                            className="gap-1"
+                          >
+                            {origin}
+                            {origin !== '*' && (
+                              <button
+                                onClick={() => removeOrigin(origin)}
+                                className="ml-1 hover:bg-destructive/20 rounded-full p-0.5"
+                              >
+                                <X className="h-3 w-3" />
+                              </button>
+                            )}
+                          </Badge>
+                        ))}
+                      </div>
+                    </div>
+
+                    <Separator />
+
+                    {/* HTTP Methods */}
+                    <div className="space-y-3">
+                      <Label className="text-sm font-medium">
+                        Allowed Methods
+                      </Label>
+                      <div className="grid grid-cols-3 gap-3">
+                        {HTTP_METHODS.map((method) => (
+                          <div
+                            key={method}
+                            className="flex items-center space-x-2"
+                          >
+                            <Checkbox
+                              id={`method-${method}`}
+                              checked={currentMethods.includes(method)}
+                              onCheckedChange={(checked) =>
+                                handleMethodChange(method, checked as boolean)
+                              }
+                            />
+                            <Label
+                              htmlFor={`method-${method}`}
+                              className="text-sm"
+                            >
+                              {method}
+                            </Label>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    <Separator />
+
+                    {/* Allowed Headers */}
+                    <div className="space-y-3">
+                      <Label className="text-sm font-medium">
+                        Allowed Headers
+                      </Label>
+                      <div className="grid grid-cols-2 gap-3">
+                        {ALLOWED_HEADERS.map((header) => (
+                          <div
+                            key={header}
+                            className="flex items-center space-x-2"
+                          >
+                            <Checkbox
+                              id={`allowed-${header}`}
+                              checked={currentAllowedHeaders.includes(header)}
+                              onCheckedChange={(checked) =>
+                                handleAllowedHeaderChange(
+                                  header,
+                                  checked as boolean
+                                )
+                              }
+                            />
+                            <Label
+                              htmlFor={`allowed-${header}`}
+                              className="text-sm"
+                            >
+                              {header}
+                            </Label>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    <Separator />
+
+                    {/* Exposed Headers */}
+                    <div className="space-y-3">
+                      <Label className="text-sm font-medium">
+                        Exposed Headers
+                      </Label>
+                      <div className="grid grid-cols-2 gap-3">
+                        {EXPOSED_HEADERS.map((header) => (
+                          <div
+                            key={header}
+                            className="flex items-center space-x-2"
+                          >
+                            <Checkbox
+                              id={`exposed-${header}`}
+                              checked={currentExposedHeaders.includes(header)}
+                              onCheckedChange={(checked) =>
+                                handleExposedHeaderChange(
+                                  header,
+                                  checked as boolean
+                                )
+                              }
+                            />
+                            <Label
+                              htmlFor={`exposed-${header}`}
+                              className="text-sm"
+                            >
+                              {header}
+                            </Label>
+                          </div>
+                        ))}
+                      </div>
+
+                      {/* Custom Exposed Header */}
+                      <div className="flex gap-2">
+                        <Input
+                          placeholder="Custom header name"
+                          value={customExposedHeader}
+                          onChange={(e) =>
+                            setCustomExposedHeader(e.target.value)
+                          }
+                          onKeyDown={(e) =>
+                            e.key === 'Enter' && addCustomExposedHeader()
+                          }
+                        />
+                        <Button
+                          onClick={addCustomExposedHeader}
+                          size="sm"
+                          variant="outline"
+                        >
+                          <Plus className="h-4 w-4" />
+                        </Button>
+                      </div>
+
+                      {/* Show custom headers */}
+                      {currentExposedHeaders.filter(
+                        (h) => !EXPOSED_HEADERS.includes(h as any)
+                      ).length > 0 && (
+                        <div className="flex flex-wrap gap-2">
+                          {currentExposedHeaders
+                            .filter((h) => !EXPOSED_HEADERS.includes(h as any))
+                            .map((header) => (
+                              <Badge
+                                key={header}
+                                variant="outline"
+                                className="gap-1"
+                              >
+                                {header}
+                                <button
+                                  onClick={() =>
+                                    handleExposedHeaderChange(header, false)
+                                  }
+                                  className="ml-1 hover:bg-destructive/20 rounded-full p-0.5"
+                                >
+                                  <X className="h-3 w-3" />
+                                </button>
+                              </Badge>
+                            ))}
+                        </div>
+                      )}
+                    </div>
+
+                    <Separator />
+
+                    {/* Boolean Settings */}
+                    <div className="space-y-4">
+                      <div className="flex items-center justify-between">
+                        <div className="space-y-0.5">
+                          <Label className="text-sm font-medium">
+                            Allow Credentials
+                          </Label>
+                          <p className="text-xs text-muted-foreground">
+                            Allow cookies and authentication headers
+                          </p>
+                        </div>
+                        <Switch
+                          checked={corsSettings.credentials}
+                          onCheckedChange={(checked) =>
+                            setCorsSettings({
+                              ...corsSettings,
+                              credentials: checked,
+                            })
+                          }
+                        />
+                      </div>
+
+                      <div className="flex items-center justify-between">
+                        <div className="space-y-0.5">
+                          <Label className="text-sm font-medium">
+                            Preflight Continue
+                          </Label>
+                          <p className="text-xs text-muted-foreground">
+                            Pass control to next handler after preflight
+                          </p>
+                        </div>
+                        <Switch
+                          checked={corsSettings.preflightContinue}
+                          onCheckedChange={(checked) =>
+                            setCorsSettings({
+                              ...corsSettings,
+                              preflightContinue: checked,
+                            })
+                          }
+                        />
+                      </div>
+                    </div>
+
+                    <Separator />
+
+                    {/* Numeric Settings */}
+                    <div className="space-y-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="maxAge" className="text-sm font-medium">
+                          Max Age (seconds)
+                        </Label>
+                        <Input
+                          id="maxAge"
+                          type="number"
+                          value={corsSettings.maxAge || ''}
+                          onChange={(e) =>
+                            setCorsSettings({
+                              ...corsSettings,
+                              maxAge: e.target.value
+                                ? Number.parseInt(e.target.value)
+                                : undefined,
+                            })
+                          }
+                          placeholder="86400"
+                        />
+                        <p className="text-xs text-muted-foreground">
+                          How long browsers can cache preflight responses
+                        </p>
+                      </div>
+
+                      <div className="space-y-2">
+                        <Label
+                          htmlFor="optionsStatus"
+                          className="text-sm font-medium"
+                        >
+                          Options Success Status
+                        </Label>
+                        <Input
+                          id="optionsStatus"
+                          type="number"
+                          value={corsSettings.optionsSuccessStatus || ''}
+                          onChange={(e) =>
+                            setCorsSettings({
+                              ...corsSettings,
+                              optionsSuccessStatus: e.target.value
+                                ? Number.parseInt(e.target.value)
+                                : undefined,
+                            })
+                          }
+                          placeholder="204"
+                        />
+                        <p className="text-xs text-muted-foreground">
+                          Status code for successful OPTIONS requests
+                        </p>
+                      </div>
+                    </div>
                   </div>
+                  <Accordion type="single" collapsible>
+                    <AccordionItem value="value-1">
+                      <AccordionTrigger>
+                        <h3 className="font-medium">
+                          Current CORS Configuration:
+                        </h3>
+                      </AccordionTrigger>
+                      <AccordionContent>
+                        <div className="mt-8 p-4 bg-muted rounded-lg">
+                          <pre className="text-sm overflow-x-auto">
+                            {JSON.stringify(corsSettings, null, 2)}
+                          </pre>
+                        </div>
+                      </AccordionContent>
+                    </AccordionItem>
+                  </Accordion>
                 </AccordionContent>
               </AccordionItem>
             </Accordion>
           </div>
 
           <DrawerFooter>
-            <Button onClick={handleSave}>Save CORS Settings</Button>
+            <Button onClick={handleSave}>Save</Button>
             <Button variant="outline" onClick={handleOpen}>
               Cancel
             </Button>
