@@ -36,9 +36,8 @@ interface NodeWrapperProps {
 interface NodeProps extends Node {
   data: WorkflowProps;
 }
-interface FinalFlowProps {
+type FinalFlowProps = WorkflowProps & {
   cardId: string;
-  workflow: WorkflowProps;
   dimensions:
     | {
         width?: number;
@@ -46,7 +45,7 @@ interface FinalFlowProps {
       }
     | undefined;
   position: XYPosition;
-}
+};
 
 const initialNodes: NodeProps[] = [];
 const initialEdges: Edge[] = [];
@@ -142,10 +141,8 @@ export default function Workflow() {
       flows.nodes.forEach((node) => {
         const data = {
           cardId: node.id,
-          workflow: {
-            ...(node.data as WorkflowProps),
-            relations: [], // reset to avoid duplication
-          },
+          ...(node.data as WorkflowProps),
+          relations: [], // reset to avoid duplication
           dimensions: node.measured,
           position: node.position,
         };
@@ -169,19 +166,19 @@ export default function Workflow() {
         const relation = (edge.data?.relation as RelationTypes) ?? '';
 
         const relationParent: Relation = {
-          controller: finalData[targetIndex].workflow.name,
+          controller: finalData[targetIndex].name,
           relation,
           isParent: true,
         };
 
         const relationChild: Relation = {
-          controller: finalData[sourceIndex].workflow.name,
+          controller: finalData[sourceIndex].name,
           relation,
           isParent: false,
         };
 
-        finalData[sourceIndex].workflow.relations.push(relationParent);
-        finalData[targetIndex].workflow.relations.push(relationChild);
+        finalData[sourceIndex].relations.push(relationParent);
+        finalData[targetIndex].relations.push(relationChild);
       });
 
       console.log(finalData);
