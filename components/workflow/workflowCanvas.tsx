@@ -251,7 +251,9 @@ export default function Workflow() {
                 setDrawerOpen(true);
               }}
             >
-              <h3>Project Name: {projectName}</h3>
+              <h3>
+                Project Name: <b>{projectName}</b>
+              </h3>
             </div>
           </Panel>
         </ReactFlow>
