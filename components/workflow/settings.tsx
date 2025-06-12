@@ -20,51 +20,12 @@ import { Badge } from '@/components/ui/badge';
 import { X, Plus } from 'lucide-react';
 import { Accordion, AccordionItem, AccordionTrigger } from '../ui/accordion';
 import { AccordionContent } from '@radix-ui/react-accordion';
-
-type CorsHttpMethod =
-  | 'GET'
-  | 'POST'
-  | 'PUT'
-  | 'DELETE'
-  | 'PATCH'
-  | 'OPTIONS'
-  | 'HEAD'
-  | 'CONNECT'
-  | 'TRACE';
-
-type CorsAllowedHeader =
-  | 'Accept'
-  | 'Authorization'
-  | 'Content-Type'
-  | 'Origin'
-  | 'X-Requested-With'
-  | 'Access-Control-Allow-Origin'
-  | 'Access-Control-Allow-Headers'
-  | 'Cache-Control'
-  | 'Pragma';
-
-type CorsExposedHeader =
-  | 'Content-Length'
-  | 'X-Knowledge-Base-Version'
-  | 'X-Request-ID'
-  | 'X-RateLimit-Limit'
-  | 'X-RateLimit-Remaining'
-  | 'X-RateLimit-Reset'
-  | 'Authorization'
-  | string;
-
-type StaticOrigin = string | string[];
-
-export type CorsOptionsCustom = {
-  origin?: StaticOrigin;
-  methods?: CorsHttpMethod | CorsHttpMethod[];
-  allowedHeaders?: CorsAllowedHeader | CorsAllowedHeader[];
-  exposedHeaders?: CorsExposedHeader | CorsExposedHeader[];
-  credentials?: boolean;
-  maxAge?: number;
-  preflightContinue?: boolean;
-  optionsSuccessStatus?: number;
-};
+import {
+  CorsAllowedHeader,
+  CorsExposedHeader,
+  CorsHttpMethod,
+  CorsOptionsCustom,
+} from '@/types/types';
 
 const HTTP_METHODS: CorsHttpMethod[] = [
   'GET',
@@ -103,11 +64,13 @@ const EXPOSED_HEADERS: CorsExposedHeader[] = [
 interface SettingsDrawerProps {
   openDrawer: boolean;
   handleOpen: () => void;
+  onSave: (name: string, cors: CorsOptionsCustom) => void;
 }
 
 export default function SettingsDrawer({
   handleOpen,
   openDrawer,
+  onSave,
 }: SettingsDrawerProps) {
   const [corsSettings, setCorsSettings] = useState<CorsOptionsCustom>({
     origin: '*',
@@ -239,6 +202,7 @@ export default function SettingsDrawer({
 
   const handleSave = () => {
     console.log('Settings:', projectName, corsSettings);
+    onSave(projectName, corsSettings);
     handleOpen();
   };
 
