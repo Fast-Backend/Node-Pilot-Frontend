@@ -99,8 +99,16 @@ const EXPOSED_HEADERS: CorsExposedHeader[] = [
   'Authorization',
 ];
 
-export default function SettingsDrawer() {
-  const [open, setOpen] = useState(false);
+interface SettingsDrawerProps {
+  openDrawer: boolean;
+  handleOpen: () => void;
+}
+
+export default function SettingsDrawer({
+  handleOpen,
+  openDrawer,
+}: SettingsDrawerProps) {
+  //   const [open, setOpen] = useState(false);
   const [corsSettings, setCorsSettings] = useState<CorsOptionsCustom>({
     origin: '*',
     methods: ['GET', 'POST'],
@@ -230,7 +238,7 @@ export default function SettingsDrawer() {
 
   const handleSave = () => {
     console.log('CORS Settings:', corsSettings);
-    setOpen(false);
+    handleOpen();
   };
 
   const currentMethods = Array.isArray(corsSettings.methods)
@@ -253,7 +261,7 @@ export default function SettingsDrawer() {
 
   return (
     <div className="p-8">
-      <Drawer open={open} onOpenChange={setOpen}>
+      <Drawer open={openDrawer} onOpenChange={handleOpen}>
         <DrawerTrigger asChild>
           <Button variant="outline" className="gap-2">
             <Settings className="h-4 w-4" />
@@ -512,7 +520,7 @@ export default function SettingsDrawer() {
 
           <DrawerFooter>
             <Button onClick={handleSave}>Save CORS Settings</Button>
-            <Button variant="outline" onClick={() => setOpen(false)}>
+            <Button variant="outline" onClick={handleOpen}>
               Cancel
             </Button>
           </DrawerFooter>

@@ -28,6 +28,8 @@ import ResizableNodeSelected from '@/components/workflow/nodeContainer/nodeWrapp
 import ConfigSummary from './config-summary';
 import { Relation, RelationTypes, WorkflowProps } from '@/types/types';
 import ParentChildCustomEdge from './custom-edge';
+import { Menu } from 'lucide-react';
+import SettingsDrawer from './settings';
 
 interface NodeWrapperProps {
   id: string;
@@ -110,6 +112,7 @@ export default function Workflow() {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
   const [rfInstance, setRfInstance] = useState<ReactFlowInstance>();
+  const [openDrawer, setDrawerOpen] = useState(false);
 
   const onAdd = useCallback(() => {
     const newNode: NodeProps = {
@@ -186,41 +189,50 @@ export default function Workflow() {
   }, [rfInstance]);
 
   return (
-    <div style={{ width: '100vw', height: '100dvh' }}>
-      <ReactFlow
-        nodes={nodes}
-        edges={edges}
-        onNodesChange={onNodesChange}
-        onEdgesChange={onEdgesChange}
-        onConnect={onConnect}
-        nodeTypes={nodeTypes}
-        fitView
-        onNodeClick={(node) => {
-          node.currentTarget.classList.add('border-2');
-          node.currentTarget.classList.add('border-red-400');
-          node.currentTarget.classList.add('rounded-2xl');
+    <>
+      <div style={{ width: '100vw', height: '100dvh' }}>
+        <ReactFlow
+          nodes={nodes}
+          edges={edges}
+          onNodesChange={onNodesChange}
+          onEdgesChange={onEdgesChange}
+          onConnect={onConnect}
+          nodeTypes={nodeTypes}
+          fitView
+          onNodeClick={(node) => {
+            node.currentTarget.classList.add('border-2');
+            node.currentTarget.classList.add('border-red-400');
+            node.currentTarget.classList.add('rounded-2xl');
+          }}
+          edgeTypes={edgeTypes}
+          onInit={(e) => setRfInstance(e as unknown as ReactFlowInstance)}
+          defaultEdgeOptions={defaultEdgeOptions}
+          // connectionLineComponent={CustomConnectionLine}
+          connectionLineStyle={connectionLineStyle}
+          connectionLineType={ConnectionLineType.Step}
+        >
+          <Controls />
+          <MiniMap />
+          <Background variant={BackgroundVariant.Dots} gap={12} size={1} />
+          <Panel position="top-right">
+            <div className="flex gap-4">
+              <Button onClick={onAdd} className="cursor-pointer">
+                Create
+              </Button>
+              <Button onClick={onSave} className="cursor-pointer">
+                save
+              </Button>
+              <Menu className="w-4 h-4" />
+            </div>
+          </Panel>
+        </ReactFlow>
+      </div>
+      <SettingsDrawer
+        handleOpen={() => {
+          setDrawerOpen(false);
         }}
-        edgeTypes={edgeTypes}
-        onInit={(e) => setRfInstance(e as unknown as ReactFlowInstance)}
-        defaultEdgeOptions={defaultEdgeOptions}
-        // connectionLineComponent={CustomConnectionLine}
-        connectionLineStyle={connectionLineStyle}
-        connectionLineType={ConnectionLineType.Step}
-      >
-        <Controls />
-        <MiniMap />
-        <Background variant={BackgroundVariant.Dots} gap={12} size={1} />
-        <Panel position="top-right">
-          <div className="flex gap-4">
-            <Button onClick={onAdd} className="cursor-pointer">
-              Create
-            </Button>
-            <Button onClick={onSave} className="cursor-pointer">
-              save
-            </Button>
-          </div>
-        </Panel>
-      </ReactFlow>
-    </div>
+        openDrawer={openDrawer}
+      />
+    </>
   );
 }
