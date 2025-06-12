@@ -215,7 +215,7 @@ export default function Workflow() {
           <MiniMap />
           <Background variant={BackgroundVariant.Dots} gap={12} size={1} />
           <Panel position="top-right">
-            <div className="flex gap-4">
+            <div className="flex gap-4 items-center">
               <Button onClick={onAdd} className="cursor-pointer">
                 Create
               </Button>
