@@ -222,7 +222,12 @@ export default function Workflow() {
               <Button onClick={onSave} className="cursor-pointer">
                 save
               </Button>
-              <Menu className="w-4 h-4" />
+              <Menu
+                className="w-4 h-4"
+                onClick={() => {
+                  setDrawerOpen(true);
+                }}
+              />
             </div>
           </Panel>
         </ReactFlow>
