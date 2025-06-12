@@ -10,7 +10,6 @@ import {
   DrawerFooter,
   DrawerHeader,
   DrawerTitle,
-  DrawerTrigger,
 } from '@/components/ui/drawer';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -18,7 +17,7 @@ import { Switch } from '@/components/ui/switch';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
-import { X, Settings, Plus } from 'lucide-react';
+import { X, Plus } from 'lucide-react';
 
 type CorsHttpMethod =
   | 'GET'
@@ -262,12 +261,12 @@ export default function SettingsDrawer({
   return (
     <div className="p-8">
       <Drawer open={openDrawer} onOpenChange={handleOpen}>
-        <DrawerTrigger asChild>
+        {/* <DrawerTrigger asChild>
           <Button variant="outline" className="gap-2">
             <Settings className="h-4 w-4" />
             Configure CORS Settings
           </Button>
-        </DrawerTrigger>
+        </DrawerTrigger> */}
         <DrawerContent className="max-h-[90vh]">
           <DrawerHeader>
             <DrawerTitle>CORS Configuration</DrawerTitle>
