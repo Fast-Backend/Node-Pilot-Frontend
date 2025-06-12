@@ -26,7 +26,12 @@ import '@xyflow/react/dist/style.css';
 import { Button } from '@/components/ui/button';
 import ResizableNodeSelected from '@/components/workflow/nodeContainer/nodeWrapper';
 import ConfigSummary from './config-summary';
-import { Relation, RelationTypes, WorkflowProps } from '@/types/types';
+import {
+  CorsOptionsCustom,
+  Relation,
+  RelationTypes,
+  WorkflowProps,
+} from '@/types/types';
 import ParentChildCustomEdge from './custom-edge';
 import { Menu } from 'lucide-react';
 import SettingsDrawer from './settings';
@@ -113,6 +118,8 @@ export default function Workflow() {
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
   const [rfInstance, setRfInstance] = useState<ReactFlowInstance>();
   const [openDrawer, setDrawerOpen] = useState(false);
+  const [projectName, setProjectName] = useState('');
+  const [corsSettings, setCorsSettings] = useState<CorsOptionsCustom>({});
 
   const onAdd = useCallback(() => {
     const newNode: NodeProps = {
@@ -148,6 +155,8 @@ export default function Workflow() {
           relations: [], // reset to avoid duplication
           dimensions: node.measured,
           position: node.position,
+          cors: corsSettings,
+          name: projectName,
         };
         finalData.push(data);
       });
@@ -186,7 +195,12 @@ export default function Workflow() {
 
       console.log(finalData);
     }
-  }, [rfInstance]);
+  }, [corsSettings, projectName, rfInstance]);
+
+  const handleSettings = (name: string, cors: CorsOptionsCustom) => {
+    setProjectName(name);
+    setCorsSettings(cors);
+  };
 
   return (
     <>
@@ -237,6 +251,7 @@ export default function Workflow() {
           setDrawerOpen(false);
         }}
         openDrawer={openDrawer}
+        onSave={handleSettings}
       />
     </>
   );
