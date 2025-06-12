@@ -123,6 +123,7 @@ export default function SettingsDrawer({
   const [origins, setOrigins] = useState<string[]>(['*']);
   const [newOrigin, setNewOrigin] = useState('');
   const [customExposedHeader, setCustomExposedHeader] = useState('');
+  const [projectName, setProjectName] = useState('Untitled');
 
   const handleMethodChange = (method: CorsHttpMethod, checked: boolean) => {
     const currentMethods = Array.isArray(corsSettings.methods)
@@ -237,7 +238,7 @@ export default function SettingsDrawer({
   };
 
   const handleSave = () => {
-    console.log('CORS Settings:', corsSettings);
+    console.log('Settings:', projectName, corsSettings);
     handleOpen();
   };
 
@@ -271,7 +272,13 @@ export default function SettingsDrawer({
           </DrawerHeader>
           <div className="px-6 flex items-center gap-4">
             <h3>name:</h3>
-            <Input placeholder="Project Name" defaultValue={'Untitled'} />
+            <Input
+              placeholder="Project Name"
+              onChange={(e) => {
+                setProjectName(e.currentTarget.value);
+              }}
+              value={projectName}
+            />
           </div>
 
           <div className="px-4 pb-4 overflow-y-auto">
