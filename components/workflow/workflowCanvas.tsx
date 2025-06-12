@@ -231,7 +231,7 @@ export default function Workflow() {
           <Panel position="top-right">
             <div className="flex gap-4 items-center">
               <Button onClick={onAdd} className="cursor-pointer">
-                Create
+                Add Entity
               </Button>
               <Button onClick={onSave} className="cursor-pointer">
                 save
