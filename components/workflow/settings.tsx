@@ -107,7 +107,6 @@ export default function SettingsDrawer({
   handleOpen,
   openDrawer,
 }: SettingsDrawerProps) {
-  //   const [open, setOpen] = useState(false);
   const [corsSettings, setCorsSettings] = useState<CorsOptionsCustom>({
     origin: '*',
     methods: ['GET', 'POST'],
