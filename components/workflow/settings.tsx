@@ -18,6 +18,8 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
 import { X, Plus } from 'lucide-react';
+import { Accordion, AccordionItem, AccordionTrigger } from '../ui/accordion';
+import { AccordionContent } from '@radix-ui/react-accordion';
 
 type CorsHttpMethod =
   | 'GET'
@@ -508,6 +510,20 @@ export default function SettingsDrawer({
                 </div>
               </div>
             </div>
+            <Accordion type="single" collapsible>
+              <AccordionItem value="value-1">
+                <AccordionTrigger>
+                  <h3 className="font-medium">Current CORS Configuration:</h3>
+                </AccordionTrigger>
+                <AccordionContent>
+                  <div className="mt-8 p-4 bg-muted rounded-lg">
+                    <pre className="text-sm overflow-x-auto">
+                      {JSON.stringify(corsSettings, null, 2)}
+                    </pre>
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
           </div>
 
           <DrawerFooter>
@@ -520,12 +536,6 @@ export default function SettingsDrawer({
       </Drawer>
 
       {/* Preview of current settings */}
-      <div className="mt-8 p-4 bg-muted rounded-lg">
-        <h3 className="font-medium mb-2">Current CORS Configuration:</h3>
-        <pre className="text-sm overflow-x-auto">
-          {JSON.stringify(corsSettings, null, 2)}
-        </pre>
-      </div>
     </div>
   );
 }
