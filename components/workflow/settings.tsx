@@ -260,7 +260,7 @@ export default function SettingsDrawer({
 
   return (
     <div className="p-8">
-      <Drawer open={openDrawer} onOpenChange={handleOpen}>
+      <Drawer open={openDrawer} onOpenChange={handleOpen} direction="right">
         {/* <DrawerTrigger asChild>
           <Button variant="outline" className="gap-2">
             <Settings className="h-4 w-4" />
