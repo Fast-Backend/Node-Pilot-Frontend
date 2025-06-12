@@ -99,7 +99,7 @@ export const ValidationTypes = [
 
 type StaticOrigin = boolean | string | RegExp | (string | RegExp)[];
 
-type CorsHttpMethod =
+export type CorsHttpMethod =
     | 'GET'
     | 'POST'
     | 'PUT'
@@ -110,7 +110,7 @@ type CorsHttpMethod =
     | 'CONNECT'
     | 'TRACE';
 
-type CorsAllowedHeader =
+export type CorsAllowedHeader =
     | 'Accept'
     | 'Authorization'
     | 'Content-Type'
@@ -121,7 +121,7 @@ type CorsAllowedHeader =
     | 'Cache-Control'
     | 'Pragma'
 
-type CorsExposedHeader =
+export type CorsExposedHeader =
     | 'Content-Length'
     | 'X-Knowledge-Base-Version'
     | 'X-Request-ID'
