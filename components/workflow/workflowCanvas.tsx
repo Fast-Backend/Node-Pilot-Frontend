@@ -118,7 +118,7 @@ export default function Workflow() {
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
   const [rfInstance, setRfInstance] = useState<ReactFlowInstance>();
   const [openDrawer, setDrawerOpen] = useState(false);
-  const [projectName, setProjectName] = useState('');
+  const [projectName, setProjectName] = useState('Untitled');
   const [corsSettings, setCorsSettings] = useState<CorsOptionsCustom>({});
 
   const onAdd = useCallback(() => {
@@ -242,6 +242,16 @@ export default function Workflow() {
                   setDrawerOpen(true);
                 }}
               />
+            </div>
+          </Panel>
+          <Panel position="top-left">
+            <div
+              className="bg-white py-2 px-4 cursor-pointer"
+              onClick={() => {
+                setDrawerOpen(true);
+              }}
+            >
+              <h3>Project Name: {projectName}</h3>
             </div>
           </Panel>
         </ReactFlow>
