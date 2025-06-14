@@ -1,3 +1,5 @@
+import { XYPosition } from "@xyflow/react";
+
 export type FieldType =
     | 'string'
     | 'number'
@@ -27,10 +29,21 @@ export type WorkflowProps = {
     relations: Relation[];
 };
 
+export type FinalFlowProps = WorkflowProps & {
+    cardId: string;
+    dimensions:
+    | {
+        width?: number;
+        height?: number;
+    }
+    | undefined;
+    position: XYPosition;
+};
+
 export type WorkflowsProps = {
     id: string;
     name: string;
-    workflows: WorkflowProps[]
+    workflows: FinalFlowProps[]
     cors?: CorsOptionsCustom;
 }
 
