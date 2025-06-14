@@ -19,7 +19,6 @@ import {
   DefaultEdgeOptions,
   ConnectionLineType,
   useReactFlow,
-  XYPosition,
 } from '@xyflow/react';
 
 import '@xyflow/react/dist/style.css';
@@ -31,10 +30,12 @@ import {
   Relation,
   RelationTypes,
   WorkflowProps,
+  WorkflowsProps,
 } from '@/types/types';
 import ParentChildCustomEdge from './custom-edge';
 import { Menu } from 'lucide-react';
 import SettingsDrawer from './settings';
+import { saveWorkflow } from '@/services/workflow';
 
 interface NodeWrapperProps {
   id: string;
@@ -43,16 +44,6 @@ interface NodeWrapperProps {
 interface NodeProps extends Node {
   data: WorkflowProps;
 }
-type FinalFlowProps = WorkflowProps & {
-  cardId: string;
-  dimensions:
-    | {
-        width?: number;
-        height?: number;
-      }
-    | undefined;
-  position: XYPosition;
-};
 
 const initialNodes: NodeProps[] = [];
 const initialEdges: Edge[] = [];
@@ -139,13 +130,16 @@ export default function Workflow() {
     [setEdges]
   );
 
-  const onSave = useCallback(() => {
-    const finalData: FinalFlowProps[] = [];
-    console.log('start');
+  const onSave = useCallback(async () => {
+    const finalData: WorkflowsProps = {
+      id: `flow_${+new Date()}`,
+      cors: corsSettings,
+      name: projectName,
+      workflows: [],
+    };
 
     if (rfInstance) {
       const flows = rfInstance.toObject();
-      console.log('Flow:', flows);
 
       // Step 1: Build finalData with cleared relations
       flows.nodes.forEach((node) => {
@@ -155,18 +149,16 @@ export default function Workflow() {
           relations: [], // reset to avoid duplication
           dimensions: node.measured,
           position: node.position,
-          cors: corsSettings,
-          name: projectName,
         };
-        finalData.push(data);
+        finalData.workflows.push(data);
       });
 
       // Step 2: Process edges and add relations
       flows.edges.forEach((edge) => {
-        const sourceIndex = finalData.findIndex(
+        const sourceIndex = finalData.workflows.findIndex(
           (flow) => flow.cardId === edge.source
         );
-        const targetIndex = finalData.findIndex(
+        const targetIndex = finalData.workflows.findIndex(
           (flow) => flow.cardId === edge.target
         );
 
@@ -178,22 +170,26 @@ export default function Workflow() {
         const relation = (edge.data?.relation as RelationTypes) ?? '';
 
         const relationParent: Relation = {
-          controller: finalData[targetIndex].name,
+          controller: finalData.workflows[targetIndex].name,
           relation,
           isParent: true,
         };
 
         const relationChild: Relation = {
-          controller: finalData[sourceIndex].name,
+          controller: finalData.workflows[sourceIndex].name,
           relation,
           isParent: false,
         };
 
-        finalData[sourceIndex].relations.push(relationParent);
-        finalData[targetIndex].relations.push(relationChild);
+        finalData.workflows[sourceIndex].relations.push(relationParent);
+        finalData.workflows[targetIndex].relations.push(relationChild);
       });
-
-      console.log(finalData);
+      try {
+        const response = await saveWorkflow(finalData);
+        console.log('Saved:', response.message);
+      } catch (err) {
+        console.error('Failed to save workflow:', err);
+      }
     }
   }, [corsSettings, projectName, rfInstance]);
 
