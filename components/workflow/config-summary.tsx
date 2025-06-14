@@ -30,26 +30,6 @@ import {
 import EditableCard from './node-modal';
 import { Handle, Position } from '@xyflow/react';
 
-// interface ConfigSummaryProps {
-//   name: string;
-//   routes: RouteMethods[];
-//   props: Properties[];
-//   onNameChange: (name: string) => void;
-//   onRouteToggle: (method: RouteMethods) => void;
-//   onPropertyNameChange: (index: number, name: string) => void;
-//   onPropertyTypeChange: (index: number, type: FieldType) => void;
-//   onPropertyNullableToggle: (index: number) => void;
-//   onAddProperty: () => void;
-//   onRemoveProperty: (index: number) => void;
-// }
-
-// const data: WorkflowProps = {
-//   name: 'name',
-//   props: [],
-//   relations: [],
-//   routes: [], // Changed to array of methods
-// };
-
 interface ConfigSummaryProps {
   id: string;
   data: WorkflowProps;
