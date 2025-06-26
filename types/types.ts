@@ -19,12 +19,12 @@ export type FieldType =
     | 'json'
     | (string & {});
 
-export type RouteMethods = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'GET_ID';
+// export type RouteMethods = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'GET_ID';
 
 // Remove the Route type and update EditableData
 export type WorkflowProps = {
     name: string;
-    routes: RouteMethods[]; // Changed from Route[] to RouteMethods[]
+    //routes: RouteMethods[]; // Changed from Route[] to RouteMethods[]
     props: Properties[];
     relations: Relation[];
 };
