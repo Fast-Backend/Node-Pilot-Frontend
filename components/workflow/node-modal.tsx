@@ -39,7 +39,7 @@ import {
   FieldTypes,
   Properties,
   // Relation,
-  RouteMethods,
+  // RouteMethods,
   ValidationRule,
   ValidationTypes,
 } from '@/types/types';
@@ -305,7 +305,7 @@ export default function EditableCard({
             {/* Name */}
 
             {/* Routes */}
-            <Accordion type="single" collapsible>
+            {/* <Accordion type="single" collapsible>
               <AccordionItem value="item-1">
                 <AccordionTrigger>
                   {' '}
@@ -367,11 +367,11 @@ export default function EditableCard({
                   </div>
                 </AccordionContent>
               </AccordionItem>
-            </Accordion>
+            </Accordion> */}
 
             <Separator className="mt-5" />
 
-            <Accordion type="single" collapsible>
+            <Accordion type="single" collapsible defaultValue="item-1">
               <AccordionItem value="item-1">
                 <AccordionTrigger>
                   <Label className="text-lg font-semibold">Properties</Label>

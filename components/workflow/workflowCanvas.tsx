@@ -115,7 +115,7 @@ export default function Workflow() {
   const onAdd = useCallback(() => {
     const newNode: NodeProps = {
       id: getNodeId(),
-      data: { name: 'unNamed', props: [], relations: [], routes: [] },
+      data: { name: 'unNamed', props: [], relations: [] },
       position: {
         x: (Math.random() - 0.5) * 400,
         y: (Math.random() - 0.5) * 400,

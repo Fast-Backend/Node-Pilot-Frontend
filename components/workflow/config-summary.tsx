@@ -17,7 +17,7 @@ import {
   WorkflowProps,
   FieldType,
   Properties,
-  RouteMethods,
+  // RouteMethods,
   //   Properties,
   //   RouteMethods,
 } from '@/types/types';
@@ -104,21 +104,21 @@ export default function ConfigSummary({
       //   return prev;
     });
   };
-  const toggleRoute = (method: RouteMethods) => {
-    setInitialData((prev) => {
-      if (prev.routes.includes(method)) {
-        return {
-          ...prev,
-          routes: prev.routes.filter((r) => r !== method),
-        };
-      } else {
-        return {
-          ...prev,
-          routes: [...prev.routes, method],
-        };
-      }
-    });
-  };
+  // const toggleRoute = (method: RouteMethods) => {
+  //   setInitialData((prev) => {
+  //     if (prev.routes.includes(method)) {
+  //       return {
+  //         ...prev,
+  //         routes: prev.routes.filter((r) => r !== method),
+  //       };
+  //     } else {
+  //       return {
+  //         ...prev,
+  //         routes: [...prev.routes, method],
+  //       };
+  //     }
+  //   });
+  // };
   const togglePropertyNullable = (index: number) => {
     setInitialData((prev) => ({
       ...prev,
@@ -232,7 +232,7 @@ export default function ConfigSummary({
           <Separator className="my-1" />
 
           {/* Routes - Toggleable Pills */}
-          <div className="space-y-2">
+          {/* <div className="space-y-2">
             <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wide">
               HTTP Methods
             </h3>
@@ -264,13 +264,13 @@ export default function ConfigSummary({
                 No methods selected
               </p>
             )}
-          </div>
+          </div> */}
 
-          <Separator className="my-2" />
+          {/* <Separator className="my-2" /> */}
 
           {/* Properties - Editable */}
           <div className="space-y-2">
-            <Accordion type="single" collapsible>
+            <Accordion type="single" collapsible defaultValue="item-1">
               <AccordionItem value="item-1">
                 <AccordionTrigger>
                   <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wide">
