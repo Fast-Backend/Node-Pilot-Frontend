@@ -305,6 +305,7 @@ export default function Workflow() {
               <Button
                 onClick={onSave}
                 className="cursor-pointer bg-green-500 hover:bg-green-800"
+                disabled={nodes.length === 0}
               >
                 Generate Project
               </Button>
