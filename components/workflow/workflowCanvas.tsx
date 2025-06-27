@@ -36,6 +36,7 @@ import ParentChildCustomEdge from './custom-edge';
 import { Menu } from 'lucide-react';
 import SettingsDrawer from './settings';
 import { saveWorkflow } from '@/services/workflow';
+// import FeatureModal from '../features/feature-modal';
 
 interface NodeWrapperProps {
   id: string;
@@ -111,6 +112,8 @@ export default function Workflow() {
   const [openDrawer, setDrawerOpen] = useState(false);
   const [projectName, setProjectName] = useState('Untitled');
   const [corsSettings, setCorsSettings] = useState<CorsOptionsCustom>({});
+  // const [openFeatureModal, setFeatureModal] = useState<boolean>(true);
+  // const [features, setFeatures] = useState<string[]>([]);
 
   const onAdd = useCallback(() => {
     const newNode: NodeProps = {
@@ -193,10 +196,77 @@ export default function Workflow() {
     }
   }, [corsSettings, projectName, rfInstance]);
 
+  // useEffect(() => {
+  //   setFeatures((prev) => {
+  //     return prev;
+  //   });
+  //   // console.log(features);
+  //   if (features) {
+  //     features.forEach((feature) => {
+  //       if (feature === 'registration-login') {
+  //         const newNode: NodeProps = {
+  //           id: getNodeId(),
+  //           data: {
+  //             name: 'user',
+  //             props: [
+  //               {
+  //                 name: 'name',
+  //                 nullable: false,
+  //                 type: 'string',
+  //                 validation: [
+  //                   {
+  //                     type: 'min',
+  //                     value: 2,
+  //                   },
+  //                 ],
+  //               },
+  //               {
+  //                 name: 'email',
+  //                 nullable: false,
+  //                 type: 'string',
+  //                 validation: [
+  //                   {
+  //                     type: 'email',
+  //                   },
+  //                 ],
+  //               },
+  //               {
+  //                 name: 'password',
+  //                 nullable: false,
+  //                 type: 'string',
+  //                 validation: [
+  //                   {
+  //                     type: 'min',
+  //                     value: 6,
+  //                   },
+  //                   {
+  //                     type: 'pattern',
+  //                     value: '^(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$',
+  //                   },
+  //                 ],
+  //               },
+  //             ],
+  //             relations: [],
+  //           },
+  //           position: {
+  //             x: (Math.random() - 0.5) * 400,
+  //             y: (Math.random() - 0.5) * 400,
+  //           },
+  //           type: 'card',
+  //         };
+  //         setNodes((nds) => nds.concat(newNode));
+  //       }
+  //     });
+  //   }
+  // }, [features, setNodes]);
+
   const handleSettings = (name: string, cors: CorsOptionsCustom) => {
     setProjectName(name);
     setCorsSettings(cors);
   };
+  // const getFeatures = (data: string[]) => {
+  //   setFeatures(data);
+  // };
 
   return (
     <>
@@ -226,11 +296,17 @@ export default function Workflow() {
           <Background variant={BackgroundVariant.Dots} gap={12} size={1} />
           <Panel position="top-right">
             <div className="flex gap-4 items-center">
-              <Button onClick={onAdd} className="cursor-pointer">
+              <Button
+                onClick={onAdd}
+                className="cursor-pointer bg-blue-600 hover:bg-blue-800"
+              >
                 Add Entity
               </Button>
-              <Button onClick={onSave} className="cursor-pointer">
-                save
+              <Button
+                onClick={onSave}
+                className="cursor-pointer bg-green-500 hover:bg-green-800"
+              >
+                Generate Code
               </Button>
               <Menu
                 className="w-4 h-4 cursor-pointer"
@@ -261,6 +337,13 @@ export default function Workflow() {
         openDrawer={openDrawer}
         onSave={handleSettings}
       />
+      {/* <FeatureModal
+        open={openFeatureModal}
+        handleModal={() => {
+          setFeatureModal(false);
+        }}
+        handleSavedFeatures={getFeatures}
+      /> */}
     </>
   );
 }
