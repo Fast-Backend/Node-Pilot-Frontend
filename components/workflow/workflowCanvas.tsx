@@ -306,7 +306,7 @@ export default function Workflow() {
                 onClick={onSave}
                 className="cursor-pointer bg-green-500 hover:bg-green-800"
               >
-                Generate Code
+                Generate Project
               </Button>
               <Menu
                 className="w-4 h-4 cursor-pointer"
