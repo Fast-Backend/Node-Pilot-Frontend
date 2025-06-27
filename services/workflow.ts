@@ -5,6 +5,6 @@ import { postData } from './api';
 export const saveWorkflow = async (workflow: WorkflowsProps) => {
     return await postData<WorkflowsProps, { message: string }>(
         '/workflows/generate',
-        workflow
+        workflow, `${workflow.name}.zip`
     );
 };
