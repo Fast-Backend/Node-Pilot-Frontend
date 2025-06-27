@@ -37,6 +37,7 @@ import { Menu } from 'lucide-react';
 import SettingsDrawer from './settings';
 import { saveWorkflow } from '@/services/workflow';
 import YouTubeDemo from '../demo';
+import { getInitialStartup } from '@/services/api';
 // import FeatureModal from '../features/feature-modal';
 
 interface NodeWrapperProps {
@@ -115,6 +116,11 @@ export default function Workflow() {
   const [corsSettings, setCorsSettings] = useState<CorsOptionsCustom>({});
   // const [openFeatureModal, setFeatureModal] = useState<boolean>(true);
   // const [features, setFeatures] = useState<string[]>([]);
+  useEffect(() => {
+    if (window) {
+      getInitialStartup();
+    }
+  }, []);
 
   const onAdd = useCallback(() => {
     const newNode: NodeProps = {

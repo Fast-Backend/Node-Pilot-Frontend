@@ -3,7 +3,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-    baseURL: `${process.env.NEXT_PUBLIC_API_BASE_URL}api` || 'http://localhost:3001/api',
+    baseURL: `${process.env.NEXT_PUBLIC_API_BASE_URL}api`,
     headers: {
         'Content-Type': 'application/json',
     },
@@ -35,4 +35,8 @@ export const postData = async <TRequest, TResponse>(
         console.error('Download error:', error);
         throw error?.response?.data || error;
     }
+};
+export const getInitialStartup = async () => {
+    const response = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}`);
+    return response.data;
 };
