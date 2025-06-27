@@ -36,6 +36,7 @@ import ParentChildCustomEdge from './custom-edge';
 import { Menu } from 'lucide-react';
 import SettingsDrawer from './settings';
 import { saveWorkflow } from '@/services/workflow';
+import YouTubeDemo from '../demo';
 // import FeatureModal from '../features/feature-modal';
 
 interface NodeWrapperProps {
@@ -338,6 +339,7 @@ export default function Workflow() {
         openDrawer={openDrawer}
         onSave={handleSettings}
       />
+      <YouTubeDemo />
       {/* <FeatureModal
         open={openFeatureModal}
         handleModal={() => {
