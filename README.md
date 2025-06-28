@@ -162,13 +162,13 @@ Response:
 
 ## 🔒 Coming Soon
 
-🔐 Email verification & password reset support
-🛒 Stripe integration (subscriptions & payments)
-💳 PayPal integration
-🧪 Test data seeding (fake data generation)
-🔐 OAuth (Google, GitHub, etc.) authentication
-🧠 AI code suggestions for entity design
-📘 API documentation generation (Swagger/OpenAPI)
+- 🔐 Email verification & password reset support
+- 🛒 Stripe integration (subscriptions & payments)
+- 💳 PayPal integration
+- 🧪 Test data seeding (fake data generation)
+- 🔐 OAuth (Google, GitHub, etc.) authentication
+- 🧠 AI code suggestions for entity design
+- 📘 API documentation generation (Swagger/OpenAPI)
 
 ---
 
