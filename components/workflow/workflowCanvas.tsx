@@ -38,6 +38,7 @@ import SettingsDrawer from './settings';
 import { saveWorkflow } from '@/services/workflow';
 import YouTubeDemo from '../demo';
 import { getInitialStartup } from '@/services/api';
+import { useIsMobile } from '@/hooks/use-mobile';
 // import FeatureModal from '../features/feature-modal';
 
 interface NodeWrapperProps {
@@ -114,6 +115,9 @@ export default function Workflow() {
   const [openDrawer, setDrawerOpen] = useState(false);
   const [projectName, setProjectName] = useState('Untitled');
   const [corsSettings, setCorsSettings] = useState<CorsOptionsCustom>({});
+
+  const isMobile = useIsMobile();
+
   // const [openFeatureModal, setFeatureModal] = useState<boolean>(true);
   // const [features, setFeatures] = useState<string[]>([]);
   useEffect(() => {
@@ -301,29 +305,56 @@ export default function Workflow() {
           <Controls />
           <MiniMap />
           <Background variant={BackgroundVariant.Dots} gap={12} size={1} />
-          <Panel position="top-right">
-            <div className="flex gap-4 items-center">
-              <Button
-                onClick={onAdd}
-                className="cursor-pointer bg-blue-600 hover:bg-blue-800"
-              >
-                Add Entity
-              </Button>
-              <Button
-                onClick={onSave}
-                className="cursor-pointer bg-green-500 hover:bg-green-800"
-                disabled={nodes.length === 0}
-              >
-                Generate Project
-              </Button>
-              <Menu
-                className="w-4 h-4 cursor-pointer"
-                onClick={() => {
-                  setDrawerOpen(true);
-                }}
-              />
-            </div>
-          </Panel>
+          {isMobile ? (
+            <Panel position="bottom-center">
+              <div className="flex gap-4 items-center">
+                <Button
+                  onClick={onAdd}
+                  className="cursor-pointer bg-blue-600 hover:bg-blue-800"
+                >
+                  Add Entity
+                </Button>
+                <Button
+                  onClick={onSave}
+                  className="cursor-pointer bg-green-500 hover:bg-green-800"
+                  disabled={nodes.length === 0}
+                >
+                  Generate Project
+                </Button>
+                {/* <Menu
+                  className="w-4 h-4 cursor-pointer"
+                  onClick={() => {
+                    setDrawerOpen(true);
+                  }}
+                /> */}
+              </div>
+            </Panel>
+          ) : (
+            <Panel position="top-right">
+              <div className="flex gap-4 items-center">
+                <Button
+                  onClick={onAdd}
+                  className="cursor-pointer bg-blue-600 hover:bg-blue-800"
+                >
+                  Add Entity
+                </Button>
+                <Button
+                  onClick={onSave}
+                  className="cursor-pointer bg-green-500 hover:bg-green-800"
+                  disabled={nodes.length === 0}
+                >
+                  Generate Project
+                </Button>
+                <Menu
+                  className="w-4 h-4 cursor-pointer"
+                  onClick={() => {
+                    setDrawerOpen(true);
+                  }}
+                />
+              </div>
+            </Panel>
+          )}
+
           <Panel position="top-left">
             <div
               className="bg-white py-2 px-4 cursor-pointer"
