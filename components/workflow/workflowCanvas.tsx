@@ -321,12 +321,6 @@ export default function Workflow() {
                 >
                   Generate Project
                 </Button>
-                {/* <Menu
-                  className="w-4 h-4 cursor-pointer"
-                  onClick={() => {
-                    setDrawerOpen(true);
-                  }}
-                /> */}
               </div>
             </Panel>
           ) : (
@@ -352,6 +346,17 @@ export default function Workflow() {
                   }}
                 />
               </div>
+            </Panel>
+          )}
+
+          {isMobile && (
+            <Panel position="top-right">
+              <Menu
+                className="w-4 h-4 cursor-pointer"
+                onClick={() => {
+                  setDrawerOpen(true);
+                }}
+              />
             </Panel>
           )}
 
