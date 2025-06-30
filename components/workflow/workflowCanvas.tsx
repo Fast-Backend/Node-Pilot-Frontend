@@ -298,6 +298,7 @@ export default function Workflow() {
           edgeTypes={edgeTypes}
           onInit={(e) => setRfInstance(e as unknown as ReactFlowInstance)}
           defaultEdgeOptions={defaultEdgeOptions}
+          deleteKeyCode={['Backspace', 'Delete']}
           // connectionLineComponent={CustomConnectionLine}
           connectionLineStyle={connectionLineStyle}
           connectionLineType={ConnectionLineType.Step}
