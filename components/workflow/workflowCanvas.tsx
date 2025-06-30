@@ -115,9 +115,7 @@ export default function Workflow() {
   const [openDrawer, setDrawerOpen] = useState(false);
   const [projectName, setProjectName] = useState('Untitled');
   const [corsSettings, setCorsSettings] = useState<CorsOptionsCustom>({});
-
   const isMobile = useIsMobile();
-
   // const [openFeatureModal, setFeatureModal] = useState<boolean>(true);
   // const [features, setFeatures] = useState<string[]>([]);
   useEffect(() => {
@@ -279,6 +277,33 @@ export default function Workflow() {
   //   setFeatures(data);
   // };
 
+  // copy & past nodes
+  const handleCopyPasteNode = () => {
+    const selectedNodes = nodes.filter((node) => node.selected);
+    if (selectedNodes.length === 0) return;
+
+    const selectedNode = selectedNodes[0];
+
+    const pasteNode = () => {
+      const newNode: NodeProps = {
+        id: getNodeId(),
+        data: {
+          name: selectedNode.data.name,
+          props: selectedNode.data.props,
+          relations: [],
+        },
+        position: {
+          x: (Math.random() - 0.5) * 400,
+          y: (Math.random() - 0.5) * 400,
+        },
+        type: 'card',
+      };
+      setNodes((nds) => nds.concat(newNode));
+    };
+
+    pasteNode();
+  };
+
   return (
     <>
       <div style={{ width: '100vw', height: '100dvh' }}>
@@ -299,6 +324,7 @@ export default function Workflow() {
           onInit={(e) => setRfInstance(e as unknown as ReactFlowInstance)}
           defaultEdgeOptions={defaultEdgeOptions}
           deleteKeyCode={['Backspace', 'Delete']}
+          onPaste={handleCopyPasteNode}
           // connectionLineComponent={CustomConnectionLine}
           connectionLineStyle={connectionLineStyle}
           connectionLineType={ConnectionLineType.Step}
