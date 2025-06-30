@@ -188,6 +188,12 @@ export default function ConfigSummary({
                   onChange={(e) => setTempName(e.target.value)}
                   className="h-8 text-base"
                   autoFocus
+                  id="tempName"
+                  onKeyDown={(event) => {
+                    if (event.key === 'Enter') {
+                      handleNameSave();
+                    }
+                  }}
                 />
                 <Button
                   variant="ghost"
@@ -304,6 +310,11 @@ export default function ConfigSummary({
                                 }
                                 className="h-7 text-sm"
                                 autoFocus
+                                onKeyDown={(event) => {
+                                  if (event.key === 'Enter') {
+                                    handlePropertyNameSave(index);
+                                  }
+                                }}
                               />
                               <Button
                                 variant="ghost"
