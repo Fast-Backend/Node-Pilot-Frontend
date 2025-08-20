@@ -110,7 +110,7 @@ export const ValidationTypes = [
     'custom',
 ];
 
-type StaticOrigin = boolean | string | RegExp | (string | RegExp)[];
+type StaticOrigin = boolean | string | RegExp | (string | RegExp)[] | undefined;
 
 export type CorsHttpMethod =
     | 'GET'
@@ -150,9 +150,9 @@ export type CorsOptionsCustom = {
     allowedHeaders?: CorsAllowedHeader | CorsAllowedHeader[];
     exposedHeaders?: CorsExposedHeader | CorsExposedHeader[];
     credentials?: boolean;
-    maxAge?: number;
+    maxAge?: number | undefined;
     preflightContinue?: boolean;
-    optionsSuccessStatus?: number;
+    optionsSuccessStatus?: number | undefined;
 };
 
 export type Relations = "one-to-one" | "one-to-many" | "many-to-many";

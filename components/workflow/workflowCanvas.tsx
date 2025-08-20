@@ -182,19 +182,19 @@ export default function Workflow() {
         const relation = (edge.data?.relation as RelationTypes) ?? '';
 
         const relationParent: Relation = {
-          controller: finalData.workflows[targetIndex].name,
+          controller: finalData.workflows[targetIndex]?.name || "",
           relation,
           isParent: true,
         };
 
         const relationChild: Relation = {
-          controller: finalData.workflows[sourceIndex].name,
+          controller:  finalData.workflows[sourceIndex]?.name || "",
           relation,
           isParent: false,
         };
 
-        finalData.workflows[sourceIndex].relations.push(relationParent);
-        finalData.workflows[targetIndex].relations.push(relationChild);
+        finalData.workflows[sourceIndex]?.relations.push(relationParent);
+        finalData.workflows[targetIndex]?.relations.push(relationChild);
       });
       try {
         const response = await saveWorkflow(finalData);
@@ -288,8 +288,8 @@ export default function Workflow() {
       const newNode: NodeProps = {
         id: getNodeId(),
         data: {
-          name: selectedNode.data.name,
-          props: selectedNode.data.props,
+          name: selectedNode?.data.name || "",
+          props: selectedNode?.data.props || [],
           relations: [],
         },
         position: {

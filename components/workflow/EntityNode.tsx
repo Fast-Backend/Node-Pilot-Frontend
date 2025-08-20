@@ -1,13 +1,13 @@
 'use client';
 
 import React, { memo } from 'react';
-import { Handle, Position, NodeProps } from '@xyflow/react';
+import { Handle, Position, Node } from '@xyflow/react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { WorkflowProps } from '@/types/types';
 import { useWorkflowStore } from '@/lib/store/workflowStore';
+import { WorkflowProps } from '@/types/types';
 
-const EntityNode = memo(({ id, data, selected }: NodeProps<WorkflowProps>) => {
+const EntityNode = memo(({ id, data, selected }: Node<WorkflowProps>) => {
   const { setSelectedNodeId } = useWorkflowStore();
 
   const handleNodeClick = () => {

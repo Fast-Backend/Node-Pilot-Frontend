@@ -44,6 +44,8 @@ export default function YouTubeDemoModal({
         setShowTrigger(true);
       }
     }
+      return undefined; // <-- make return type consistent
+
   }, [showOnFirstVisit]);
 
   return (

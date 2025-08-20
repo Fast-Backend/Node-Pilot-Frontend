@@ -451,7 +451,7 @@ export default function SettingsDrawer({
                           </p>
                         </div>
                         <Switch
-                          checked={corsSettings.credentials}
+                          checked={corsSettings.credentials || false}
                           onCheckedChange={(checked) =>
                             setCorsSettings({
                               ...corsSettings,
@@ -471,7 +471,7 @@ export default function SettingsDrawer({
                           </p>
                         </div>
                         <Switch
-                          checked={corsSettings.preflightContinue}
+                          checked={corsSettings.preflightContinue || false}
                           onCheckedChange={(checked) =>
                             setCorsSettings({
                               ...corsSettings,
