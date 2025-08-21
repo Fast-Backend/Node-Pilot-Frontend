@@ -13,6 +13,9 @@ It connects with the VIBES backend to generate a complete, production-ready Node
 - 🔗 Create **relationships** between entities via visual edge linking
 - 🔁 Supports **one-to-one**, **one-to-many**, and **many-to-many** relationships
 - 🌐 Configure **CORS options** directly from the interface
+- 📚 **NEW**: Enable interactive **Swagger/OpenAPI documentation**
+- 🌱 **NEW**: Configure **intelligent test data seeding** with Faker.js
+- ⚙️ **NEW**: Select and configure **optional project features**
 - 📦 Sends your model to the backend to generate a fully functional backend project zipped and ready to download
 
 ---
@@ -73,17 +76,25 @@ http://localhost:3000
 
 ---
 
-### ⚙️ Configure CORS
+### ⚙️ Configure Project Settings
 
-Click the **Settings icon** tab to define:
+Click the **Settings icon** to configure:
 
+**Basic Settings:**
 - Project name
-- Allowed origins
-- Methods
-- Headers
-- Credentials
+- CORS options (origins, methods, headers, credentials)
 
-This config is included in the generated backend's middleware setup.
+**Optional Features:**
+- **📚 API Documentation**: Generate interactive Swagger UI
+  - Set documentation title and description
+  - Configure API version
+  - Enable/disable Swagger UI interface
+- **🌱 Test Data Seeding**: Generate realistic test data
+  - Set number of records per entity
+  - Choose data locale (en, es, fr, etc.)
+  - Enable custom seeding templates
+
+All configurations are included in the generated backend project.
 
 ---
 
@@ -103,11 +114,14 @@ Once your model is ready:
 
 The backend project includes:
 
-- RESTful routes
-- Type-safe controllers
-- Prisma schema
+- RESTful routes with full CRUD operations
+- Type-safe controllers with validation
+- Prisma schema with relationships
 - PostgreSQL integration
 - CORS middleware
+- **Optional**: Interactive Swagger/OpenAPI documentation
+- **Optional**: Intelligent test data seeding with Faker.js
+- **Optional**: Additional features (auth, payments, etc.)
 - File structure ready for development or deployment
 
 See the [VIBES Backend README](../backend/README.md) for more.
@@ -160,15 +174,23 @@ Response:
 
 ---
 
+## ✅ Available Features
+
+- 📚 **Interactive Swagger/OpenAPI Documentation** - Generate beautiful, interactive API docs
+- 🌱 **Intelligent Test Data Seeding** - Realistic fake data with Faker.js
+- ⚙️ **Configurable Project Features** - Enable/disable features as needed
+- 🔗 **Visual Relationship Modeling** - Drag-and-drop entity relationships
+- 🌐 **CORS Configuration** - Full CORS settings management
+
 ## 🔒 Coming Soon
 
-- 🔐 Email verification & password reset support
-- 🛒 Stripe integration (subscriptions & payments)
-- 💳 PayPal integration
-- 🧪 Test data seeding (fake data generation)
-- 🔐 OAuth (Google, GitHub, etc.) authentication
-- 🧠 AI code suggestions for entity design
-- 📘 API documentation generation (Swagger/OpenAPI)
+- 🔐 **Email Authentication** - Verification & password reset support  
+- 🛒 **Payment Integration** - Stripe, PayPal, Square support
+- 🔐 **OAuth Providers** - Google, GitHub, Facebook, Twitter auth
+- 🧠 **AI Code Suggestions** - Smart entity design recommendations
+- 📊 **Database Migrations** - Version-controlled schema changes
+- 🔒 **Role-Based Access Control** - User permissions and roles
+- 🌐 **Multi-tenant Support** - Tenant isolation and management
 
 ---
 
