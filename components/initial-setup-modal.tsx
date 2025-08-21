@@ -15,7 +15,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { ProjectFeatures } from '@/types/types';
-import { Sparkles, Database, Mail, Rocket } from 'lucide-react';
+import { Sparkles, Database, Mail, Rocket, Shield } from 'lucide-react';
 
 interface InitialSetupModalProps {
   onSetupComplete: (config: InitialSetupConfig) => void;
@@ -38,6 +38,16 @@ export default function InitialSetupModal({
   const [projectName, setProjectName] = useState('project');
   const [enableEmailAuth, setEnableEmailAuth] = useState(false);
   const [emailProvider, setEmailProvider] = useState<'nodemailer' | 'sendgrid' | 'resend'>('nodemailer');
+  const [enableOAuth, setEnableOAuth] = useState(false);
+  const [oauthProviders, setOauthProviders] = useState<('google' | 'github' | 'facebook' | 'twitter')[]>([]);
+
+  const toggleOAuthProvider = (provider: 'google' | 'github' | 'facebook' | 'twitter') => {
+    setOauthProviders(prev => 
+      prev.includes(provider) 
+        ? prev.filter(p => p !== provider)
+        : [...prev, provider]
+    );
+  };
   const [useInitialSetup, setUseInitialSetup] = useState(false);
 
   useEffect(() => {
@@ -75,8 +85,8 @@ export default function InitialSetupModal({
         },
       },
       oauthProviders: {
-        enabled: false,
-        providers: [],
+        enabled: enableOAuth,
+        providers: oauthProviders,
         callbackUrls: {},
       },
       paymentIntegration: {
@@ -180,6 +190,63 @@ export default function InitialSetupModal({
                     <option value="sendgrid">SendGrid</option>
                     <option value="resend">Resend</option>
                   </select>
+                </div>
+              </div>
+            )}
+          </div>
+
+          <Separator />
+
+          {/* OAuth Providers */}
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <div className="space-y-0.5">
+                <Label className="text-sm font-medium flex items-center gap-2">
+                  <Shield className="w-4 h-4" />
+                  OAuth Providers
+                </Label>
+                <p className="text-xs text-muted-foreground">
+                  Enable social login with Google, GitHub, Facebook, and Twitter
+                </p>
+              </div>
+              <Switch
+                checked={enableOAuth}
+                onCheckedChange={setEnableOAuth}
+              />
+            </div>
+
+            {enableOAuth && (
+              <div className="pl-6 space-y-3 border-l-2 border-muted">
+                <div className="space-y-2">
+                  <Label className="text-sm font-medium">Select Providers</Label>
+                  <div className="grid grid-cols-2 gap-3">
+                    {[
+                      { id: 'google', name: 'Google', icon: '🔍' },
+                      { id: 'github', name: 'GitHub', icon: '🐙' },
+                      { id: 'facebook', name: 'Facebook', icon: '📘' },
+                      { id: 'twitter', name: 'Twitter', icon: '🐦' },
+                    ].map((provider) => (
+                      <div
+                        key={provider.id}
+                        onClick={() => toggleOAuthProvider(provider.id as 'google' | 'github' | 'facebook' | 'twitter')}
+                        className={`cursor-pointer p-3 rounded-lg border-2 transition-colors ${
+                          oauthProviders.includes(provider.id as 'google' | 'github' | 'facebook' | 'twitter')
+                            ? 'border-blue-500 bg-blue-50'
+                            : 'border-gray-200 hover:border-gray-300'
+                        }`}
+                      >
+                        <div className="flex items-center gap-2">
+                          <span className="text-lg">{provider.icon}</span>
+                          <span className="text-sm font-medium">{provider.name}</span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  {oauthProviders.length > 0 && (
+                    <p className="text-xs text-muted-foreground mt-2">
+                      Selected: {oauthProviders.map(p => p.charAt(0).toUpperCase() + p.slice(1)).join(', ')}
+                    </p>
+                  )}
                 </div>
               </div>
             )}
