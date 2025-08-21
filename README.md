@@ -1,8 +1,8 @@
-# 🧩 VIBES Frontend — Visual Backend Code Generator
+# 🧩 Node-Flow Frontend — Visual Backend Code Generator
 
-**VIBES Frontend** is an interactive, canvas-based web application that allows users to visually model their backend by creating entities, defining properties, and configuring relationships — all without writing a single line of code.
+**Node-Flow Frontend** is an interactive, canvas-based web application that allows users to visually model their backend by creating entities, defining properties, and configuring relationships — all without writing a single line of code.
 
-It connects with the VIBES backend to generate a complete, production-ready Node.js + TypeScript + Prisma + PostgreSQL codebase, tailored to your design.
+It connects with the Node-Flow backend to generate a complete, production-ready Node.js + TypeScript + Prisma + PostgreSQL codebase, tailored to your design.
 
 ---
 
@@ -130,7 +130,7 @@ The backend project includes:
 - **Optional**: Additional features (payments, OAuth, etc.)
 - File structure ready for development or deployment
 
-See the [VIBES Backend README](../backend/README.md) for more.
+See the [Node-Flow Backend README](../backend/README.md) for more.
 
 ---
 
@@ -162,7 +162,7 @@ Generate the backend, connect your frontend, and start building — fast.
 
 ## 🔄 Backend Communication
 
-All generation requests are sent to the VIBES backend via:
+All generation requests are sent to the Node-Flow backend via:
 
 ```http
 POST /api/workflows
@@ -200,4 +200,4 @@ Response:
 
 ---
 
-## ✨ Build your backend visually with **VIBES** — no boilerplate, no problem.
+## ✨ Build your backend visually with **Node-Flow** — no boilerplate, no problem.

@@ -132,7 +132,7 @@ export default function InitialSetupModal({
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2 text-xl">
             <Sparkles className="w-6 h-6 text-blue-600" />
-            Welcome to VIBES!
+            Welcome to Node-Flow!
           </DialogTitle>
           <DialogDescription>
             Let&apos;s get your backend project set up quickly. You can always change these settings later.

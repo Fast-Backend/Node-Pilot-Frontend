@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'Vibes',
-  description: 'Generate your node Code',
+  title: 'Node-Flow',
+  description: 'Visual Backend Code Generator - Generate your Node.js backend code',
 };
 
 export default function RootLayout({
