@@ -1,12 +1,13 @@
 import { create } from 'zustand';
 import { devtools, persist } from 'zustand/middleware';
 import { Node, Edge } from '@xyflow/react';
-import { WorkflowProps, CorsOptionsCustom, RelationTypes } from '@/types/types';
+import { WorkflowProps, CorsOptionsCustom, RelationTypes, ProjectFeatures } from '@/types/types';
 
 interface WorkflowState {
   // Project settings
   projectName: string;
   corsSettings: CorsOptionsCustom;
+  projectFeatures: ProjectFeatures;
 
   // Canvas state
   nodes: Node<WorkflowProps>[];
@@ -23,6 +24,7 @@ interface WorkflowState {
   // Actions
   setProjectName: (name: string) => void;
   setCorsSettings: (cors: CorsOptionsCustom) => void;
+  setProjectFeatures: (features: ProjectFeatures) => void;
   setNodes: (nodes: Node<WorkflowProps>[]) => void;
   setEdges: (edges: Edge[]) => void;
   addNode: (node: Node<WorkflowProps>) => void;
@@ -48,6 +50,40 @@ export const useWorkflowStore = create<WorkflowState>()(
         // Initial state
         projectName: 'Untitled Project',
         corsSettings: {},
+        projectFeatures: {
+          testDataSeeding: {
+            enabled: false,
+            recordCount: 10,
+            locale: 'en',
+            customSeed: false,
+          },
+          apiDocumentation: {
+            enabled: false,
+            title: '',
+            description: '',
+            version: '1.0.0',
+            includeSwaggerUI: true,
+          },
+          emailAuth: {
+            enabled: false,
+            provider: 'nodemailer',
+            templates: {
+              verification: true,
+              passwordReset: true,
+              welcome: false,
+            },
+          },
+          oauthProviders: {
+            enabled: false,
+            providers: [],
+            callbackUrls: {},
+          },
+          paymentIntegration: {
+            enabled: false,
+            provider: 'stripe',
+            features: [],
+          },
+        },
         nodes: [],
         edges: [],
         isGenerating: false,
@@ -58,6 +94,7 @@ export const useWorkflowStore = create<WorkflowState>()(
         // Actions
         setProjectName: (name) => set({ projectName: name }),
         setCorsSettings: (cors) => set({ corsSettings: cors }),
+        setProjectFeatures: (features) => set({ projectFeatures: features }),
         setNodes: (nodes) => set({ nodes }),
         setEdges: (edges) => set({ edges }),
 
@@ -129,7 +166,14 @@ export const useWorkflowStore = create<WorkflowState>()(
           selectedNodeId: null,
           validationErrors: [],
           projectName: 'Untitled Project',
-          corsSettings: {}
+          corsSettings: {},
+          projectFeatures: {
+            testDataSeeding: { enabled: false, recordCount: 10, locale: 'en', customSeed: false },
+            apiDocumentation: { enabled: false, title: '', description: '', version: '1.0.0', includeSwaggerUI: true },
+            emailAuth: { enabled: false, provider: 'nodemailer', templates: { verification: true, passwordReset: true, welcome: false } },
+            oauthProviders: { enabled: false, providers: [], callbackUrls: {} },
+            paymentIntegration: { enabled: false, provider: 'stripe', features: [] },
+          }
         }),
 
         validateWorkflow: () => {
@@ -205,6 +249,7 @@ export const useWorkflowStore = create<WorkflowState>()(
         partialize: (state) => ({
           projectName: state.projectName,
           corsSettings: state.corsSettings,
+          projectFeatures: state.projectFeatures,
           nodes: state.nodes,
           edges: state.edges
         })
