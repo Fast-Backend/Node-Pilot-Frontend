@@ -25,6 +25,7 @@ import {
   CorsExposedHeader,
   CorsHttpMethod,
   CorsOptionsCustom,
+  ProjectFeatures,
 } from '@/types/types';
 
 const HTTP_METHODS: CorsHttpMethod[] = [
@@ -64,7 +65,7 @@ const EXPOSED_HEADERS: CorsExposedHeader[] = [
 interface SettingsDrawerProps {
   openDrawer: boolean;
   handleOpen: () => void;
-  onSave: (name: string, cors: CorsOptionsCustom) => void;
+  onSave: (name: string, cors: CorsOptionsCustom, features: ProjectFeatures) => void;
 }
 
 export default function SettingsDrawer({
@@ -87,6 +88,42 @@ export default function SettingsDrawer({
   const [newOrigin, setNewOrigin] = useState('');
   const [customExposedHeader, setCustomExposedHeader] = useState('');
   const [projectName, setProjectName] = useState('Untitled');
+  
+  // Project Features State
+  const [features, setFeatures] = useState<ProjectFeatures>({
+    testDataSeeding: {
+      enabled: false,
+      recordCount: 10,
+      locale: 'en',
+      customSeed: false,
+    },
+    apiDocumentation: {
+      enabled: false,
+      title: '',
+      description: '',
+      version: '1.0.0',
+      includeSwaggerUI: true,
+    },
+    emailAuth: {
+      enabled: false,
+      provider: 'nodemailer',
+      templates: {
+        verification: true,
+        passwordReset: true,
+        welcome: false,
+      },
+    },
+    oauthProviders: {
+      enabled: false,
+      providers: [],
+      callbackUrls: {},
+    },
+    paymentIntegration: {
+      enabled: false,
+      provider: 'stripe',
+      features: [],
+    },
+  });
 
   const handleMethodChange = (method: CorsHttpMethod, checked: boolean) => {
     const currentMethods = Array.isArray(corsSettings.methods)
@@ -201,9 +238,40 @@ export default function SettingsDrawer({
   };
 
   const handleSave = () => {
-    console.log('Settings:', projectName, corsSettings);
-    onSave(projectName, corsSettings);
+    console.log('Settings:', projectName, corsSettings, features);
+    onSave(projectName, corsSettings, features);
     handleOpen();
+  };
+
+  // Features update helpers
+  const updateFeatureFlag = (feature: keyof ProjectFeatures, enabled: boolean) => {
+    setFeatures(prev => ({
+      ...prev,
+      [feature]: {
+        ...prev[feature],
+        enabled,
+      },
+    }));
+  };
+
+  const updateTestDataConfig = (config: Partial<ProjectFeatures['testDataSeeding']>) => {
+    setFeatures(prev => ({
+      ...prev,
+      testDataSeeding: {
+        ...prev.testDataSeeding,
+        ...config,
+      },
+    }));
+  };
+
+  const updateApiDocsConfig = (config: Partial<ProjectFeatures['apiDocumentation']>) => {
+    setFeatures(prev => ({
+      ...prev,
+      apiDocumentation: {
+        ...prev.apiDocumentation,
+        ...config,
+      },
+    }));
   };
 
   const currentMethods = Array.isArray(corsSettings.methods)
@@ -247,9 +315,222 @@ export default function SettingsDrawer({
 
           <div className="px-4 pb-4 overflow-y-auto">
             <Accordion type="single" collapsible>
-              <AccordionItem value="value-1">
+              {/* Test Data Seeding */}
+              <AccordionItem value="features-testdata">
                 <AccordionTrigger>
-                  <h3 className="font-medium">CORS Configuration</h3>
+                  <div className="flex items-center gap-2">
+                    <h3 className="font-medium">🧪 Test Data Seeding</h3>
+                    {features.testDataSeeding.enabled && (
+                      <Badge variant="secondary" className="text-xs">
+                        Enabled
+                      </Badge>
+                    )}
+                  </div>
+                </AccordionTrigger>
+                <AccordionContent>
+                  <div className="space-y-4 pt-4">
+                    {/* Enable Test Data */}
+                    <div className="flex items-center justify-between">
+                      <div className="space-y-0.5">
+                        <Label className="text-sm font-medium">
+                          Generate Test Data
+                        </Label>
+                        <p className="text-xs text-muted-foreground">
+                          Create realistic fake data based on your schema
+                        </p>
+                      </div>
+                      <Switch
+                        checked={features.testDataSeeding.enabled}
+                        onCheckedChange={(checked) =>
+                          updateFeatureFlag('testDataSeeding', checked)
+                        }
+                      />
+                    </div>
+
+                    {features.testDataSeeding.enabled && (
+                      <div className="space-y-4 pl-4 border-l-2 border-muted">
+                        {/* Record Count */}
+                        <div className="space-y-2">
+                          <Label htmlFor="recordCount" className="text-sm font-medium">
+                            Records per Entity
+                          </Label>
+                          <Input
+                            id="recordCount"
+                            type="number"
+                            min="1"
+                            max="1000"
+                            value={features.testDataSeeding.recordCount}
+                            onChange={(e) =>
+                              updateTestDataConfig({
+                                recordCount: parseInt(e.target.value) || 10,
+                              })
+                            }
+                            placeholder="10"
+                          />
+                          <p className="text-xs text-muted-foreground">
+                            Number of fake records to generate per entity
+                          </p>
+                        </div>
+
+                        {/* Locale */}
+                        <div className="space-y-2">
+                          <Label htmlFor="locale" className="text-sm font-medium">
+                            Data Locale
+                          </Label>
+                          <select
+                            id="locale"
+                            value={features.testDataSeeding.locale}
+                            onChange={(e) =>
+                              updateTestDataConfig({ locale: e.target.value })
+                            }
+                            className="w-full px-3 py-2 text-sm border border-input bg-background rounded-md"
+                          >
+                            <option value="en">English (US)</option>
+                            <option value="en_GB">English (UK)</option>
+                            <option value="es">Spanish</option>
+                            <option value="fr">French</option>
+                            <option value="de">German</option>
+                            <option value="it">Italian</option>
+                            <option value="pt">Portuguese</option>
+                            <option value="ja">Japanese</option>
+                            <option value="ko">Korean</option>
+                            <option value="zh">Chinese</option>
+                          </select>
+                          <p className="text-xs text-muted-foreground">
+                            Language/region for generated data
+                          </p>
+                        </div>
+
+                        {/* Custom Seed */}
+                        <div className="flex items-center justify-between">
+                          <div className="space-y-0.5">
+                            <Label className="text-sm font-medium">
+                              Custom Seed Script
+                            </Label>
+                            <p className="text-xs text-muted-foreground">
+                              Include a customizable seeding script
+                            </p>
+                          </div>
+                          <Switch
+                            checked={features.testDataSeeding.customSeed || false}
+                            onCheckedChange={(checked) =>
+                              updateTestDataConfig({ customSeed: checked })
+                            }
+                          />
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+
+              {/* API Documentation */}
+              <AccordionItem value="features-apidocs">
+                <AccordionTrigger>
+                  <div className="flex items-center gap-2">
+                    <h3 className="font-medium">📘 API Documentation</h3>
+                    {features.apiDocumentation.enabled && (
+                      <Badge variant="secondary" className="text-xs">
+                        Enabled
+                      </Badge>
+                    )}
+                  </div>
+                </AccordionTrigger>
+                <AccordionContent>
+                  <div className="space-y-4 pt-4">
+                    {/* Enable API Docs */}
+                    <div className="flex items-center justify-between">
+                      <div className="space-y-0.5">
+                        <Label className="text-sm font-medium">
+                          Generate API Documentation
+                        </Label>
+                        <p className="text-xs text-muted-foreground">
+                          Auto-generate OpenAPI/Swagger documentation
+                        </p>
+                      </div>
+                      <Switch
+                        checked={features.apiDocumentation.enabled}
+                        onCheckedChange={(checked) =>
+                          updateFeatureFlag('apiDocumentation', checked)
+                        }
+                      />
+                    </div>
+
+                    {features.apiDocumentation.enabled && (
+                      <div className="space-y-4 pl-4 border-l-2 border-muted">
+                        {/* API Title */}
+                        <div className="space-y-2">
+                          <Label htmlFor="apiTitle" className="text-sm font-medium">
+                            API Title
+                          </Label>
+                          <Input
+                            id="apiTitle"
+                            value={features.apiDocumentation.title || projectName + ' API'}
+                            onChange={(e) =>
+                              updateApiDocsConfig({ title: e.target.value })
+                            }
+                            placeholder={`${projectName} API`}
+                          />
+                        </div>
+
+                        {/* API Description */}
+                        <div className="space-y-2">
+                          <Label htmlFor="apiDescription" className="text-sm font-medium">
+                            Description
+                          </Label>
+                          <textarea
+                            id="apiDescription"
+                            value={features.apiDocumentation.description || ''}
+                            onChange={(e) =>
+                              updateApiDocsConfig({ description: e.target.value })
+                            }
+                            placeholder="Describe your API..."
+                            className="w-full px-3 py-2 text-sm border border-input bg-background rounded-md min-h-[80px] resize-y"
+                          />
+                        </div>
+
+                        {/* API Version */}
+                        <div className="space-y-2">
+                          <Label htmlFor="apiVersion" className="text-sm font-medium">
+                            API Version
+                          </Label>
+                          <Input
+                            id="apiVersion"
+                            value={features.apiDocumentation.version || '1.0.0'}
+                            onChange={(e) =>
+                              updateApiDocsConfig({ version: e.target.value })
+                            }
+                            placeholder="1.0.0"
+                          />
+                        </div>
+
+                        {/* Include Swagger UI */}
+                        <div className="flex items-center justify-between">
+                          <div className="space-y-0.5">
+                            <Label className="text-sm font-medium">
+                              Include Swagger UI
+                            </Label>
+                            <p className="text-xs text-muted-foreground">
+                              Generate interactive documentation interface
+                            </p>
+                          </div>
+                          <Switch
+                            checked={features.apiDocumentation.includeSwaggerUI}
+                            onCheckedChange={(checked) =>
+                              updateApiDocsConfig({ includeSwaggerUI: checked })
+                            }
+                          />
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+
+              {/* CORS Configuration */}
+              <AccordionItem value="cors-config">
+                <AccordionTrigger>
+                  <h3 className="font-medium">🌐 CORS Configuration</h3>
                 </AccordionTrigger>
                 <AccordionContent>
                   <div className="space-y-6">
