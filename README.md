@@ -93,6 +93,11 @@ Click the **Settings icon** to configure:
   - Set number of records per entity
   - Choose data locale (en, es, fr, etc.)
   - Enable custom seeding templates
+- **🔐 Email Authentication**: Complete user authentication system
+  - Choose email provider (Nodemailer, SendGrid, Resend)
+  - Configure email templates (verification, password reset, welcome)
+  - JWT token management with refresh tokens
+  - Rate limiting and security features
 
 All configurations are included in the generated backend project.
 
@@ -121,7 +126,8 @@ The backend project includes:
 - CORS middleware
 - **Optional**: Interactive Swagger/OpenAPI documentation
 - **Optional**: Intelligent test data seeding with Faker.js
-- **Optional**: Additional features (auth, payments, etc.)
+- **Optional**: Email authentication with verification & password reset
+- **Optional**: Additional features (payments, OAuth, etc.)
 - File structure ready for development or deployment
 
 See the [VIBES Backend README](../backend/README.md) for more.
@@ -181,10 +187,10 @@ Response:
 - ⚙️ **Configurable Project Features** - Enable/disable features as needed
 - 🔗 **Visual Relationship Modeling** - Drag-and-drop entity relationships
 - 🌐 **CORS Configuration** - Full CORS settings management
+- 🔐 **Email Authentication** - Complete verification & password reset system
 
 ## 🔒 Coming Soon
 
-- 🔐 **Email Authentication** - Verification & password reset support  
 - 🛒 **Payment Integration** - Stripe, PayPal, Square support
 - 🔐 **OAuth Providers** - Google, GitHub, Facebook, Twitter auth
 - 🧠 **AI Code Suggestions** - Smart entity design recommendations
