@@ -45,6 +45,7 @@ export type WorkflowsProps = {
     name: string;
     workflows: FinalFlowProps[]
     cors?: CorsOptionsCustom;
+    features?: ProjectFeatures;
 }
 
 export type ValidationRule =
@@ -156,3 +157,43 @@ export type CorsOptionsCustom = {
 };
 
 export type Relations = "one-to-one" | "one-to-many" | "many-to-many";
+
+// Additional Features Configuration
+export interface ProjectFeatures {
+  testDataSeeding: {
+    enabled: boolean;
+    recordCount: number;
+    locale: string;
+    customSeed?: boolean;
+  };
+  apiDocumentation: {
+    enabled: boolean;
+    title?: string;
+    description?: string;
+    version?: string;
+    includeSwaggerUI: boolean;
+  };
+  emailAuth: {
+    enabled: boolean;
+    provider?: 'sendgrid' | 'nodemailer' | 'resend';
+    templates?: {
+      verification: boolean;
+      passwordReset: boolean;
+      welcome: boolean;
+    };
+  };
+  oauthProviders: {
+    enabled: boolean;
+    providers: ('google' | 'github' | 'discord' | 'linkedin')[];
+    callbackUrls?: Record<string, string>;
+  };
+  paymentIntegration: {
+    enabled: boolean;
+    provider?: 'stripe' | 'paypal';
+    features?: ('subscriptions' | 'one-time' | 'webhooks')[];
+  };
+}
+
+export interface EnhancedWorkflowsProps extends WorkflowsProps {
+  features?: ProjectFeatures;
+}
