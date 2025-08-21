@@ -282,10 +282,10 @@ export default function Workflow() {
     setProjectName(config.projectName);
     setProjectFeatures(config.features);
 
-    // If email auth is enabled, we need a User entity regardless
-    if (config.enableEmailAuth || config.useInitialSetup) {
-      // Define User entity props based on email auth
-      const userProps = config.enableEmailAuth ? [
+    // If email auth or OAuth is enabled, we need a User entity regardless
+    if (config.enableEmailAuth || config.useInitialSetup || config.features.oauthProviders.enabled) {
+      // Define base User entity props
+      let userProps = config.enableEmailAuth ? [
         { name: 'email', type: 'string' as const, nullable: false, validation: [{ type: 'email' as const }] },
         { name: 'password', type: 'string' as const, nullable: false, validation: [{ type: 'minLength' as const, value: 8 }] },
         { name: 'firstName', type: 'string' as const, nullable: true },
@@ -305,6 +305,24 @@ export default function Workflow() {
         { name: 'createdAt', type: 'date' as const, nullable: false },
         { name: 'updatedAt', type: 'date' as const, nullable: false },
       ];
+
+      // Add OAuth fields if OAuth is enabled
+      if (config.features.oauthProviders.enabled) {
+        const oauthFields = [];
+        if (config.features.oauthProviders.providers.includes('google')) {
+          oauthFields.push({ name: 'googleId', type: 'string' as const, nullable: true });
+        }
+        if (config.features.oauthProviders.providers.includes('github')) {
+          oauthFields.push({ name: 'githubId', type: 'string' as const, nullable: true });
+        }
+        if (config.features.oauthProviders.providers.includes('facebook')) {
+          oauthFields.push({ name: 'facebookId', type: 'string' as const, nullable: true });
+        }
+        if (config.features.oauthProviders.providers.includes('twitter')) {
+          oauthFields.push({ name: 'twitterId', type: 'string' as const, nullable: true });
+        }
+        userProps = [...userProps, ...oauthFields];
+      }
 
       // Create entities based on configuration
       const demoNodes: NodeProps[] = [
