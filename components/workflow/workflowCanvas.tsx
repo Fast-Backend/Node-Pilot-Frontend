@@ -27,6 +27,7 @@ import ResizableNodeSelected from '@/components/workflow/nodeContainer/nodeWrapp
 import ConfigSummary from './config-summary';
 import {
   CorsOptionsCustom,
+  ProjectFeatures,
   Relation,
   RelationTypes,
   WorkflowProps,
@@ -39,6 +40,7 @@ import { saveWorkflow } from '@/services/workflow';
 import YouTubeDemo from '../demo';
 import { getInitialStartup } from '@/services/api';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { useWorkflowStore } from '@/lib/store/workflowStore';
 // import FeatureModal from '../features/feature-modal';
 
 interface NodeWrapperProps {
@@ -115,6 +117,7 @@ export default function Workflow() {
   const [openDrawer, setDrawerOpen] = useState(false);
   const [projectName, setProjectName] = useState('Untitled');
   const [corsSettings, setCorsSettings] = useState<CorsOptionsCustom>({});
+  const { projectFeatures, setProjectFeatures } = useWorkflowStore();
   const isMobile = useIsMobile();
   // const [openFeatureModal, setFeatureModal] = useState<boolean>(true);
   // const [features, setFeatures] = useState<string[]>([]);
@@ -148,6 +151,7 @@ export default function Workflow() {
       cors: corsSettings,
       name: projectName,
       workflows: [],
+      features: projectFeatures,
     };
 
     if (rfInstance) {
@@ -203,7 +207,7 @@ export default function Workflow() {
         console.error('Failed to save workflow:', err);
       }
     }
-  }, [corsSettings, projectName, rfInstance]);
+  }, [corsSettings, projectName, projectFeatures, rfInstance]);
 
   // useEffect(() => {
   //   setFeatures((prev) => {
@@ -269,9 +273,10 @@ export default function Workflow() {
   //   }
   // }, [features, setNodes]);
 
-  const handleSettings = (name: string, cors: CorsOptionsCustom) => {
+  const handleSettings = (name: string, cors: CorsOptionsCustom, features: ProjectFeatures) => {
     setProjectName(name);
     setCorsSettings(cors);
+    setProjectFeatures(features);
   };
   // const getFeatures = (data: string[]) => {
   //   setFeatures(data);
