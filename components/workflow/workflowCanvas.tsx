@@ -41,6 +41,7 @@ import YouTubeDemo from '../demo';
 import { getInitialStartup } from '@/services/api';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useWorkflowStore } from '@/lib/store/workflowStore';
+import InitialSetupModal, { InitialSetupConfig } from '../initial-setup-modal';
 // import FeatureModal from '../features/feature-modal';
 
 interface NodeWrapperProps {
@@ -55,27 +56,22 @@ const initialNodes: NodeProps[] = [];
 const initialEdges: Edge[] = [];
 
 const NodeWrapper = ({ data, id }: NodeWrapperProps) => {
-  const [nodeData, setNodeData] = useState(data);
-  const handleUpdate = (updatedData: WorkflowProps) => {
-    setNodeData(updatedData);
-    // Optionally, you can propagate the changes to the parent or global state here
-  };
-  //   console.log('Node Data:', id);
   const reactFlow = useReactFlow();
-
-  useEffect(() => {
+  
+  const handleUpdate = useCallback((updatedData: WorkflowProps) => {
+    // Update the node directly through ReactFlow
     reactFlow.setNodes((nds) =>
       nds.map((node) => {
         if (node.id === id) {
           return {
             ...node,
-            data: { ...node.data, ...nodeData },
+            data: { ...node.data, ...updatedData },
           };
         }
         return node;
       })
     );
-  }, [nodeData, id, reactFlow]);
+  }, [id, reactFlow]);
 
   return <ConfigSummary id={id} data={data} onUpdate={handleUpdate} />;
 };
@@ -273,10 +269,135 @@ export default function Workflow() {
   //   }
   // }, [features, setNodes]);
 
+
+
   const handleSettings = (name: string, cors: CorsOptionsCustom, features: ProjectFeatures) => {
     setProjectName(name);
     setCorsSettings(cors);
     setProjectFeatures(features);
+  };
+
+  const handleInitialSetup = (config: InitialSetupConfig) => {
+    // Set project name and features
+    setProjectName(config.projectName);
+    setProjectFeatures(config.features);
+
+    // If email auth is enabled, we need a User entity regardless
+    if (config.enableEmailAuth || config.useInitialSetup) {
+      // Define User entity props based on email auth
+      const userProps = config.enableEmailAuth ? [
+        { name: 'email', type: 'string' as const, nullable: false, validation: [{ type: 'email' as const }] },
+        { name: 'password', type: 'string' as const, nullable: false, validation: [{ type: 'minLength' as const, value: 8 }] },
+        { name: 'firstName', type: 'string' as const, nullable: true },
+        { name: 'lastName', type: 'string' as const, nullable: true },
+        { name: 'isEmailVerified', type: 'boolean' as const, nullable: false },
+        { name: 'emailVerificationToken', type: 'string' as const, nullable: true },
+        { name: 'passwordResetToken', type: 'string' as const, nullable: true },
+        { name: 'passwordResetTokenExpiry', type: 'date' as const, nullable: true },
+        { name: 'refreshToken', type: 'string' as const, nullable: true },
+        { name: 'lastLoginAt', type: 'date' as const, nullable: true },
+        { name: 'createdAt', type: 'date' as const, nullable: false },
+        { name: 'updatedAt', type: 'date' as const, nullable: false },
+      ] : [
+        { name: 'email', type: 'string' as const, nullable: false, validation: [{ type: 'email' as const }] },
+        { name: 'firstName', type: 'string' as const, nullable: true },
+        { name: 'lastName', type: 'string' as const, nullable: true },
+        { name: 'createdAt', type: 'date' as const, nullable: false },
+        { name: 'updatedAt', type: 'date' as const, nullable: false },
+      ];
+
+      // Create entities based on configuration
+      const demoNodes: NodeProps[] = [
+        // User entity (always included when email auth or initial setup is enabled)
+        {
+          id: `user-${Date.now()}`,
+          type: 'card',
+          position: { x: 50, y: 50 },
+          data: {
+            name: 'User',
+            props: userProps,
+            relations: [],
+          },
+        },
+      ];
+
+      // Add additional demo entities only if initial setup is enabled
+      if (config.useInitialSetup) {
+        demoNodes.push(
+          // Post entity
+          {
+            id: `post-${Date.now()}`,
+            type: 'card',
+            position: { x: 350, y: 50 },
+            data: {
+              name: 'Post',
+              props: [
+                { name: 'title', type: 'string' as const, nullable: false, validation: [{ type: 'minLength' as const, value: 3 }] },
+                { name: 'content', type: 'string' as const, nullable: false },
+                { name: 'published', type: 'boolean' as const, nullable: false },
+                { name: 'publishedAt', type: 'date' as const, nullable: true },
+                { name: 'createdAt', type: 'date' as const, nullable: false },
+                { name: 'updatedAt', type: 'date' as const, nullable: false },
+              ],
+              relations: [
+                { relation: 'one-to-many', isParent: false, controller: 'User' }
+              ],
+            },
+          },
+          // Comment entity
+          {
+            id: `comment-${Date.now()}`,
+            type: 'card',
+            position: { x: 200, y: 300 },
+            data: {
+              name: 'Comment',
+              props: [
+                { name: 'content', type: 'string' as const, nullable: false, validation: [{ type: 'minLength' as const, value: 1 }] },
+                { name: 'createdAt', type: 'date' as const, nullable: false },
+                { name: 'updatedAt', type: 'date' as const, nullable: false },
+              ],
+              relations: [
+                { relation: 'one-to-many', isParent: false, controller: 'User' },
+                { relation: 'one-to-many', isParent: false, controller: 'Post' }
+              ],
+            },
+          }
+        );
+      }
+
+      setNodes(demoNodes);
+
+      // Create relationships between entities only if we have multiple entities
+      const demoEdges = [];
+      
+      if (config.useInitialSetup && demoNodes.length >= 3) {
+        demoEdges.push(
+          {
+            id: 'user-post',
+            source: demoNodes[0]?.id || '', // User
+            target: demoNodes[1]?.id || '', // Post
+            type: 'parent_child',
+            data: { startLabel: 'parent', endLabel: 'child' },
+          },
+          {
+            id: 'user-comment',
+            source: demoNodes[0]?.id || '', // User
+            target: demoNodes[2]?.id || '', // Comment
+            type: 'parent_child',
+            data: { startLabel: 'parent', endLabel: 'child' },
+          },
+          {
+            id: 'post-comment',
+            source: demoNodes[1]?.id || '', // Post
+            target: demoNodes[2]?.id || '', // Comment
+            type: 'parent_child',
+            data: { startLabel: 'parent', endLabel: 'child' },
+          }
+        );
+      }
+
+      setEdges(demoEdges);
+    }
   };
   // const getFeatures = (data: string[]) => {
   //   setFeatures(data);
@@ -406,6 +527,7 @@ export default function Workflow() {
           </Panel>
         </ReactFlow>
       </div>
+      <InitialSetupModal onSetupComplete={handleInitialSetup} />
       <SettingsDrawer
         handleOpen={() => {
           setDrawerOpen(false);
