@@ -274,6 +274,7 @@ export default function SettingsDrawer({
     }));
   };
 
+
   const currentMethods = Array.isArray(corsSettings.methods)
     ? corsSettings.methods
     : corsSettings.methods
@@ -526,6 +527,7 @@ export default function SettingsDrawer({
                   </div>
                 </AccordionContent>
               </AccordionItem>
+
 
               {/* CORS Configuration */}
               <AccordionItem value="cors-config">
@@ -846,6 +848,7 @@ export default function SettingsDrawer({
           </DrawerFooter>
         </DrawerContent>
       </Drawer>
+
 
       {/* Preview of current settings */}
     </div>
