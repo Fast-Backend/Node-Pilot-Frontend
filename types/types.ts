@@ -184,7 +184,7 @@ export interface ProjectFeatures {
   };
   oauthProviders: {
     enabled: boolean;
-    providers: ('google' | 'github' | 'discord' | 'linkedin')[];
+    providers: ('google' | 'github' | 'facebook' | 'twitter')[];
     callbackUrls?: Record<string, string>;
   };
   paymentIntegration: {
